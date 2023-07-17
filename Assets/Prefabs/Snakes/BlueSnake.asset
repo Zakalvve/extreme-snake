@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c9ba3cea912c7448a4d4930748fd28, type: 3}
+  m_Name: BlueSnake
+  m_EditorClassIdentifier: 
+  HeadUp: {fileID: -1948812568, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  HeadDown: {fileID: -931086617, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  HeadLeft: {fileID: -813994463, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  HeadRight: {fileID: -1181663801, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  TailUp: {fileID: -591925698, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  TailDown: {fileID: 901042003, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  TailLeft: {fileID: 1593385235, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  TailRight: {fileID: 1288385184, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  TopLeft: {fileID: -717652625, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  TopRight: {fileID: 2088536602, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  BottomLeft: {fileID: 564981373, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  BottomRight: {fileID: -1189591737, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  Horizontal: {fileID: 1281116239, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}
+  Vertical: {fileID: 612008445, guid: c093821be64b7eb4fb577c2c30d83aff, type: 3}

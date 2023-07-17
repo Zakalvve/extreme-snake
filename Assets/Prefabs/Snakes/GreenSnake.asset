@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c9ba3cea912c7448a4d4930748fd28, type: 3}
+  m_Name: GreenSnake
+  m_EditorClassIdentifier: 
+  HeadUp: {fileID: 725313732, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  HeadDown: {fileID: -1381410870, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  HeadLeft: {fileID: 1935028498, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  HeadRight: {fileID: -306747171, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  TailUp: {fileID: 2143983175, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  TailDown: {fileID: 1361888242, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  TailLeft: {fileID: 756962347, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  TailRight: {fileID: -2009508614, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  TopLeft: {fileID: -1118817659, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  TopRight: {fileID: -1899385443, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  BottomLeft: {fileID: 1576028580, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  BottomRight: {fileID: -376363961, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  Horizontal: {fileID: 1577875667, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}
+  Vertical: {fileID: -1522495767, guid: 6fb818e7fa37e824cb2666b5244aa252, type: 3}

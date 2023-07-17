@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c9ba3cea912c7448a4d4930748fd28, type: 3}
+  m_Name: PinkSnake
+  m_EditorClassIdentifier: 
+  HeadUp: {fileID: -1462710607, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  HeadDown: {fileID: 1867039622, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  HeadLeft: {fileID: 1642793385, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  HeadRight: {fileID: 255760957, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  TailUp: {fileID: 398671391, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  TailDown: {fileID: -795289469, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  TailLeft: {fileID: -1742326748, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  TailRight: {fileID: 448549404, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  TopLeft: {fileID: 1236140077, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  TopRight: {fileID: 11187254, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  BottomLeft: {fileID: -903016296, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  BottomRight: {fileID: 316171086, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  Horizontal: {fileID: -1744744722, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}
+  Vertical: {fileID: -938939485, guid: e6c23a01daf47fc41b8d24852fce0d08, type: 3}

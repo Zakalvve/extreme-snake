@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3261442853206872116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 973003400123612652}
+  - component: {fileID: 6278842141045991177}
+  m_Layer: 0
+  m_Name: BasePlayerController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &973003400123612652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3261442853206872116}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 356.87292, y: 182.78415, z: 0.14689553}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6278842141045991177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3261442853206872116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: d93636f45b2f0a64ab58090c86be0249, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a5dd22b5-5d48-4426-aa9c-5d87f56a8ffa
+    m_ActionName: SnakeControls/Up[/Keyboard/w,/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7796aa48-67c5-44f1-91f0-afeb023481b6
+    m_ActionName: SnakeControls/Down[/Keyboard/s,/Keyboard/downArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: aea25a25-020f-416b-bfac-662a07788f98
+    m_ActionName: SnakeControls/Left[/Keyboard/a,/Keyboard/leftArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9508a2de-6705-47de-ba99-de1b7bfbbf43
+    m_ActionName: SnakeControls/Right[/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 11219cc9-13fd-4dd7-a796-7bedf4b04469
+    m_ActionName: SnakeControls/Pause[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0882c43a-92c8-41a4-a45c-99bda0b369bb
+    m_ActionName: TwoPlayerLocalLayout/Up[/Keyboard/w]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 11c11edc-97f9-40c5-944a-d5db5a67a2f3
+    m_ActionName: TwoPlayerLocalLayout/Down[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f2e7b07b-5ed5-42f6-94ab-f3742a357de8
+    m_ActionName: TwoPlayerLocalLayout/Left[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 846fbbfd-68e1-441d-8512-4831a8e803e7
+    m_ActionName: TwoPlayerLocalLayout/Right[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 3d05b49b-ffd0-49ea-9a42-c26bdfef55b2
+    m_ActionName: TwoPlayerLocalLayout/P2 Up[/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fc63f8b1-8ec2-47f5-b356-6045ebfb16a6
+    m_ActionName: TwoPlayerLocalLayout/P2 Down[/Keyboard/downArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ade04543-1981-42d7-a318-541e0f5195b3
+    m_ActionName: TwoPlayerLocalLayout/P2 Left[/Keyboard/leftArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8a1f7b62-4b6a-40de-bb67-69b4d1d2a559
+    m_ActionName: TwoPlayerLocalLayout/P2 Right[/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c36b04ad-8019-435f-8b8b-3f6966aafca4
+    m_ActionName: TwoPlayerLocalLayout/Pause[/Keyboard/space,/Keyboard/enter]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: SnakeControls
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
