@@ -55,6 +55,12 @@ public class GameState : BaseMonobehaviourState<GameManager>
         ControllerSettings cs;
         cs = new ControllerSettings();
 
+        if (_context.Settings.SnakeControllingEntity.Count == 0 && GameManager.isDevelopment) {
+            //create default setup for development
+            _context.Settings.SnakeControllingEntity.Add(new ControllingEntitySettings(_context.defaultSkin,"Sid", ParticipantType.PLAYER_1));
+            _context.Settings.SnakeControllingEntity.Add(new ControllingEntitySettings(_context.defaultSkin,"SuckMyBalls23",ParticipantType.COMPUTER));
+        }
+
         //setup player controller
         GameManager.Instance.Settings.SnakeControllingEntity.Where(entity => {
             return entity.EntityType == ParticipantType.PLAYER_1 || entity.EntityType == ParticipantType.PLAYER_2;
@@ -100,9 +106,9 @@ public class GameState : BaseMonobehaviourState<GameManager>
         s.AssignEmitter(emitter);
         emitter.Subscribe("OnSnakeCreated", _ => {
             emitter.Emit("OnReskin",this,new ReskinEventArgs(entity.Skin));
-            if (entity.EntityType != ParticipantType.COMPUTER) {
+            //if (entity.EntityType != ParticipantType.COMPUTER) {
                 emitter.Emit("OnPlayerSnakeCreated",this);
-            }
+            //}
             _context.Level.RegisterSnake(s.ExtractSegmentPositions());
         });
 

@@ -10,9 +10,10 @@ namespace ExtremeSnake.Game
     //Make a State Machine
     public class GameManager : Singleton<GameManager>, IStateful<IMonobehaviourState>
     {
+        public static bool isDevelopment = true;
+        public SnakeSprites defaultSkin;
         //for development and starting from various non default entry points
         public StartingState startingState;
-
         private IMonobehaviourState _state;
 
         public EventEmitter GameEmitter { get; private set; }
