@@ -1,5 +1,6 @@
 ﻿using ExtremeSnake.Game;
 using ExtremeSnake.Game.Snakes;
+using ExtremeSnake.Game.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -44,6 +45,8 @@ public class MenuPlayerComponent : MonoBehaviour
         IsPlayerActive = true;
     }
 
+    public bool IsTwoPlayer { get { return PlayerType == ParticipantType.PLAYER_2 ? true : false; } }
+
     public void Initialize(ParticipantType type = ParticipantType.COMPUTER) {
         PlayerType = type;
         IsPlayer = type != ParticipantType.COMPUTER;
@@ -61,11 +64,13 @@ public class MenuPlayerComponent : MonoBehaviour
                 break;
             case ParticipantType.COMPUTER:
                 PlayerTypeText.text = "COM";
-                OnReady();
+                _isReady = true;
+                SetReadyIcons();
                 break;
             default: 
                 PlayerTypeText.text = "COM";
-                OnReady();
+                _isReady = true;
+                SetReadyIcons();
                 break;
         }
         SetReadyIcons();
@@ -98,12 +103,16 @@ public class MenuPlayerComponent : MonoBehaviour
         NotReadyIcon.SetActive(!_isReady);
     }
     public void OnReady() {
+        if (PlayerType == ParticipantType.COMPUTER) {
+            GameManager.Instance.GameEmitter.Emit("RemovePlayerComponent",this);
+            return;
+        }
         _isReady = !_isReady;
         SetReadyIcons();
     }
 
     public void AddPlayer() {
-        GameManager.Instance.GameEmitter.Emit("OnPlayerComponentAdded",this);
+        GameManager.Instance.GameEmitter.Emit("OnPlayerComponentAdded",this, new AddPlayerEventArgs(ParticipantType.COMPUTER));
     }
 }
 
