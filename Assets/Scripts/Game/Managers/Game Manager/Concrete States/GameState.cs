@@ -10,108 +10,59 @@ using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
 
-public class GameState : BaseMonobehaviourState<GameManager>
+namespace ExtremeSnake.Game
 {
-    public GameState(GameManager context) : base(context) { }
+    public class GameState : BaseMonobehaviourState<GameManager>
+    {
+        public GameState(GameManager context) : base(context) { }
 
-    public bool isPaused = false;
-    public float elapsedTime = 0f;
+        private bool _isPaused = false;
+        private float _elapsedTimeSinceLastSecond = 0f;
+        private float _elapsedTimeSinceLastTick = 0f;
+        private int _secondsRemaining;
 
-    public override void TransitionTo() {
-
-        _context._controllers = new List<IController>();
-
-        _context.GameEmitter.Subscribe("OnGameOver",HandleGameOver);
-        _context.GameEmitter.Subscribe("OnPause",HandlePause);
-        _context.GameEmitter.Subscribe("OnLevelAwake",HandleLevelLoaded);
-        CreateControllers();
-    }
-
-    public override void Update() { }
-
-    public override void FixedUpdate() {
-        if (!isPaused) {
-            if (elapsedTime > _context.Settings.DifficultySettings.SnakeDifficulty.GetTickTimeFromSnakeSpeed()) {
-                _context.GameEmitter.Emit("OnTick",this);
-                elapsedTime = 0f;
-            }
-            elapsedTime += Time.deltaTime;
-        }
-    }
-
-    public override void LateUpdate() { }
-
-    public void HandleGameOver(object sender) {
-        _context.GameEmitter.UnsubscribeFromAll();
-        SceneManager.LoadScene(0);
-        _context.ChangeState(new MenuState(_context));
-    }
-    public void HandlePause(object sender) {
-        isPaused = isPaused ? false : true;
-    }
-
-    public void CreateControllers() {
-        //initialize controllers
-        ControllerSettings cs;
-        cs = new ControllerSettings();
-
-        if (_context.Settings.SnakeControllingEntity.Count == 0 && GameManager.isDevelopment) {
-            //create default setup for development
-            _context.Settings.SnakeControllingEntity.Add(new ControllingEntitySettings(_context.defaultSkin,"Sid", ParticipantType.PLAYER_1));
-            _context.Settings.SnakeControllingEntity.Add(new ControllingEntitySettings(_context.defaultSkin,"SuckMyBalls23",ParticipantType.COMPUTER));
+        public override void TransitionTo() {
+            _secondsRemaining = _context.Settings.Duration;
+            _context.GameEmitter.Subscribe("OnGameOver",HandleGameOver);
+            _context.GameEmitter.Subscribe("OnPause",HandlePause);
         }
 
-        //setup player controller
-        GameManager.Instance.Settings.SnakeControllingEntity.Where(entity => {
-            return entity.EntityType == ParticipantType.PLAYER_1 || entity.EntityType == ParticipantType.PLAYER_2;
-        }).ToList().ForEach(player => {
-            cs.Entities.Add(player);
-        });
+        public override void Update() { }
 
-        if (cs.Entities.Count == 2) cs.CreateAttachAction<LocalTwoPlayerController>();
-        else cs.CreateAttachAction<PlayerController>();
+        public override void FixedUpdate() {
+            if (!_isPaused) {
+                _elapsedTimeSinceLastTick += Time.deltaTime;
+                _elapsedTimeSinceLastSecond += Time.deltaTime;
 
-        _context.Settings.ControllerInfo.Add(cs);
+                //on each tick
+                if (_elapsedTimeSinceLastTick > _context.Settings.DifficultySettings.SnakeDifficulty.GetTickTimeFromSnakeSpeed()) {
+                    _context.GameEmitter.Emit("OnTick",this);
+                    _elapsedTimeSinceLastTick = 0f;
+                }
 
-        //setup AI controllers
-        GameManager.Instance.Settings.SnakeControllingEntity.Where(entity => {
-            return entity.EntityType == ParticipantType.COMPUTER;
-        }).ToList().ForEach(computer => {
-            cs = new ControllerSettings();
-            cs.CreateAttachAction<AIController>();
-            cs.Entities.Add(computer);
-            _context.Settings.ControllerInfo.Add(cs);
-        });
-    }
-    public void HandleLevelLoaded(object sender) {
-        //normally would cycle through game settings to determine number of players/computers create controllers for each one
-        //for now we will create a single player controller
-        _context.Level = (Level)sender;
-
-        foreach (var ctrlSettings in _context.Settings.ControllerInfo) {
-            GameObject controllerGO = GameObject.Instantiate(_context.Settings.BaseEntityControllerPrefab);
-            controllerGO.transform.parent = _context.gameObject.transform;
-            IController controller = ctrlSettings.AttachControllerToGameObject(controllerGO);
-            _context._controllers.Add(controller);
-            foreach (var player in ctrlSettings.Entities) {
-                CreateSnake(controller,_context.Settings.ExtremeSnakePrefab,player);
+                //on each second
+                if (_elapsedTimeSinceLastSecond > 1f) {
+                    _context.GameEmitter.Emit("OnSecondTick",this);
+                    _elapsedTimeSinceLastSecond = 0f;
+                    _secondsRemaining--;
+                    if (_secondsRemaining <= 0) {
+                        _context.GameEmitter.Emit("OnGameOver",this);
+                    }
+                }
             }
         }
-    }
 
-    public void CreateSnake(IController controller,GameObject snakePrefab, ControllingEntitySettings entity) {
-        GameObject snake = _context.Level.GetSnakeSpawner().Spawn(snakePrefab);
-        EventEmitter emitter = new EventEmitter();
-        Snake s = snake.GetComponent<Snake>();
-        s.AssignEmitter(emitter);
-        emitter.Subscribe("OnSnakeCreated", _ => {
-            emitter.Emit("OnReskin",this,new ReskinEventArgs(entity.Skin));
-            //if (entity.EntityType != ParticipantType.COMPUTER) {
-                emitter.Emit("OnPlayerSnakeCreated",this);
-            //}
-            _context.Level.RegisterSnake(s.ExtractSegmentPositions());
-        });
+        public override void LateUpdate() { }
 
-        controller.AssignEmitter(emitter);
+        public void HandleGameOver(object sender) {
+            _context.GameEmitter.UnsubscribeFromAll();
+            SceneManager.LoadScene(0);
+            _context.ChangeState(new MenuState(_context));
+        }
+
+        public void HandlePause(object sender) {
+            _isPaused = _isPaused ? false : true;
+            _context.GameEmitter.Emit("TogglePause",this);
+        }
     }
 }

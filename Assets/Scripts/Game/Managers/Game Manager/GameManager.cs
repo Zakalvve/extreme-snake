@@ -10,10 +10,11 @@ namespace ExtremeSnake.Game
     //Make a State Machine
     public class GameManager : Singleton<GameManager>, IStateful<IMonobehaviourState>
     {
-        public static bool isDevelopment = true;
         public SnakeSprites defaultSkin;
         //for development and starting from various non default entry points
         public StartingState startingState;
+        public static bool isDevelopment = true;
+
         private IMonobehaviourState _state;
 
         public EventEmitter GameEmitter { get; private set; }
@@ -31,7 +32,7 @@ namespace ExtremeSnake.Game
             if (startingState == StartingState.MENU)
                 _state = new MenuState(this);
             else
-                _state = new GameState(this);
+                _state = new LoadingLevelState(this);
 
             _state.TransitionTo();
         }

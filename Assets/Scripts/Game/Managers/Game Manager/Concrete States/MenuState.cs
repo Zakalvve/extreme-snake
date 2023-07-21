@@ -23,7 +23,7 @@ namespace ExtremeSnake.Game
         private void HandleLoadLevel(object sender, LoadLevelArgs args) {
             _context.GameEmitter.UnsubscribeFromAll();
             SceneManager.LoadScene(args.LevelToLoad.SceneName);
-            _context.ChangeState(new GameState(_context));
+            _context.ChangeState(new LoadingLevelState(_context));
         }
     }
 }
