@@ -15,9 +15,10 @@ MonoBehaviour:
   Name: Normal
   SnakeDifficulty:
     SnakeSpeed: 5
-    SnakeStartingLength: 5
+    SnakeStartingLength: 12
     NumberRepeatedFailsAllowed: 20
-    ShrinkTimerLength: 8
+    ShrinkTimerLength: 12
+    InitialGraceLength: 12
   FoodScarcity:
     FoodSpawnRate: 20
     MaxFood: 12

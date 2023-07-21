@@ -17,7 +17,8 @@ MonoBehaviour:
     SnakeSpeed: 10
     SnakeStartingLength: 16
     NumberRepeatedFailsAllowed: 4
-    ShrinkTimerLength: 3
+    ShrinkTimerLength: 8
+    InitialGraceLength: 14
   FoodScarcity:
     FoodSpawnRate: 16
     MaxFood: 18
