@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a22b3dfef9ed56142a793f12f7735baf, type: 3}
+  m_Name: MultiplierGradients
+  m_EditorClassIdentifier: 
+  Default: {fileID: 11400000, guid: 834a5cd6c696dc44f924914b37273632, type: 2}
+  Two: {fileID: 11400000, guid: b2d348bcc569ffb44b66cfec4d4802ee, type: 2}
+  Four: {fileID: 11400000, guid: 7d22725e6b44c9e4eab3a26e62daef07, type: 2}
+  Eight: {fileID: 11400000, guid: adc3a48f2c1843a4ab1c61ce701efb28, type: 2}
+  Sixteen: {fileID: 11400000, guid: b8268f1647236ad438f931bcbd48fe45, type: 2}
+  ThirtyTwo: {fileID: 11400000, guid: 36028de295d4f7442a44012136fd0695, type: 2}
+  SixtyFour: {fileID: 11400000, guid: 23959c56614f46d4aa0e0c0614566003, type: 2}
