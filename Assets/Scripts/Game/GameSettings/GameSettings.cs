@@ -27,4 +27,5 @@ public class GameSettings
 
     public List<ControllingEntitySettings> SnakeControllingEntity { get; set; } = new List<ControllingEntitySettings>();
     public List<ControllerSettings> ControllerInfo { get; set; } = new List<ControllerSettings>();
+    public int Duration { get; set; } = 5 * 60; //5 minutes
 }
