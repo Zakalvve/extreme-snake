@@ -3,11 +3,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using System;
 
 namespace ExtremeSnake.Utils
 {
     public class UtilsClass
     {
+        public static int FloorPower2(int x) {
+            if (x < 1) {
+                return 1;
+            }
+            return (int)Math.Pow(2,(int)Math.Log(x,2));
+        }
+
         public static Vector2Int DirectionTo(Vector2Int from,Vector2Int to) {
             return to - from;
         }
@@ -54,7 +62,7 @@ namespace ExtremeSnake.Utils
 
             var ndx = 0;
             lock (sync)
-                ndx = Random.Range(0,count); // returns non-negative number less than max
+                ndx = UnityEngine.Random.Range(0,count); // returns non-negative number less than max
 
             return enumerable.ElementAt(ndx);
         }
