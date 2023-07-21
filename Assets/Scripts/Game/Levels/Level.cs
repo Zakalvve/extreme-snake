@@ -37,9 +37,9 @@ namespace ExtremeSnake.Game.Levels
             _foodSpawner = new FoodSpawner(foodInLevel);
         }
         public void Start() {
-            GameManager.Instance.GameEmitter.Emit("OnLevelAwake",this);
             GameManager.Instance.GameEmitter.Subscribe("OnTick",Tick);
             GameManager.Instance.GameEmitter.Subscribe<SnakeMoveEventArgs>("OnSnakePositionsChanged",UpdateWalkables);
+            GameManager.Instance.GameEmitter.Emit("OnLevelStartComplete",this);
         }
 
         public ISpawner GetSnakeSpawner() {
@@ -90,12 +90,11 @@ namespace ExtremeSnake.Game.Levels
 
         public void RegisterSnake(List<LevelPosition> SnakeSegmentPositions) {
             SnakeSegmentPositions.ForEach(position => {
-                Debug.Log(_layers[position.Layer].RegisterPositionNotWalkable((Vector3Int)position.Position));
+                _layers[position.Layer].RegisterPositionNotWalkable((Vector3Int)position.Position);
             });
         }
 
         public void UpdateWalkables(object sender, SnakeMoveEventArgs args) {
-            Debug.Log("Updating collisioon map");
             if (args.Claimed != null)
                 _layers[args.Claimed.Layer].RegisterPositionNotWalkable((Vector3Int)args.Claimed.Position);
 
