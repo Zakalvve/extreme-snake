@@ -1,4 +1,5 @@
 using ExtremeSnake.Game;
+using ExtremeSnake.Game.Data;
 using ExtremeSnake.Game.Food;
 using ExtremeSnake.Game.Snakes;
 using System.Collections;
@@ -13,6 +14,7 @@ namespace ExtremeSnake.Game.Snakes
     {
         private ISnakeData _data;
         private ISnakeModel _model;
+        private SnakeDifficulty difficulty;
         public Vector2 NewDirection { get; set; } = Vector2.zero; //used to check against actual direction and track input changes for logic only
 
         public SnakeLogic(ISnakeData data, ISnakeModel model) {
@@ -20,6 +22,9 @@ namespace ExtremeSnake.Game.Snakes
             _model = model;
             _model.Draw();
             _data.SnakeEmitter.Subscribe<EatEventArgs>("OnEat",HandleEat);
+
+            difficulty = GameManager.Instance.Settings.DifficultySettings.SnakeDifficulty;
+            _data.Fullness = difficulty.InitialGraceLength + difficulty.ShrinkTimerLength;
         }
 
         public void OnMove() {
@@ -32,9 +37,17 @@ namespace ExtremeSnake.Game.Snakes
             }
             else {
                 _model.ChangeLength(-1);
-                _data.SnakeEmitter.Emit("OnShrink",this);
+                _data.SnakeEmitter.Emit("ScoreOnShrink",this, new ScoreEventArgs(_data.UUID));
             }
             _model.Draw();
+        }
+
+        public void HandleHunger() {
+            _data.Fullness--;
+            if (_data.Fullness == 0) {
+                _model.ChangeLength(-1);
+                _data.Fullness = difficulty.ShrinkTimerLength;
+            }
         }
 
         public void OnChangeDirection(Vector2 inputDirection) {
@@ -43,9 +56,11 @@ namespace ExtremeSnake.Game.Snakes
             }
         }
 
-        public void HandleEat(object sender, EatEventArgs args) {
-            _model.ChangeLength(args.FoodEaten.GrowthValue);
+        public void HandleEat(object sender,EatEventArgs args) {
+            _model.AddGrowth(args.FoodEaten.GrowthValue);
             _model.Draw();
+            _data.Fullness += difficulty.ShrinkTimerLength * args.FoodEaten.GrowthValue;
+            _data.SnakeEmitter.Emit("ScoreOnEat",this,new ScoreEventArgs(_data.UUID,args.FoodEaten.PointsValue));
         }
     }
 }

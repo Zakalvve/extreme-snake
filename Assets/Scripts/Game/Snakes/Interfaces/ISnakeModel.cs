@@ -11,5 +11,6 @@ namespace ExtremeSnake.Game.Snakes
         void Draw();
         void Move();
         Vector2 UpdateDirection(Vector2 newDirection);
+        public void AddGrowth(int amount);
     }
 }

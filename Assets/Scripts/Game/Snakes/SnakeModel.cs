@@ -9,8 +9,10 @@ namespace ExtremeSnake.Game.Snakes
     {
         public Vector2 MoveDirection { get { return _data.MoveDirection; } }
         public Vector2 HeadPosition { get { return _data.Segments.First.Value.ModelPosition; } }
+        private int _growth = 0;
 
         private ISnakeData _data;
+        private bool canDraw = false;
 
         public SnakeModel(ISnakeData data,Vector2Int spawnPosition, int layer) {
             _data = data;
@@ -18,24 +20,22 @@ namespace ExtremeSnake.Game.Snakes
             //create segments
             _data.Segments.AddFirst(CreateSegment(_data.ViewData.HeadPrefab,spawnPosition, layer));
             _data.Segments.AddLast(CreateSegment(_data.ViewData.BodyPrefab,spawnPosition + Vector2Int.RoundToInt(_data.MoveDirection * -1), layer));
-            ChangeLength(_data.StartingLength - 2);
-            _data.SnakeEmitter.Subscribe("OnPlayerSnakeCreated",HandleAttachToCamera);
-            _data.SnakeEmitter.Subscribe<ReskinEventArgs>("OnReskin",HandleReskin);
+            _growth = _data.StartingLength - 2;
+            _data.SnakeEmitter.Subscribe<SnakeCreatedEventArgs>("SnakeCreated",HandleReskin);
         }
 
-
-        //is this even being used??
-        public void HandleAttachToCamera(object sender) {
-            GameManager.Instance.GameEmitter.Emit("OnPlayerSnakeCreated",this,new CameraEventArgs(_data.Segments.First.Value.Segment.transform));
-            //Camera.main.GetComponent<CameraController>().Initialize(this, new CameraOnEventArgs(_data.Segments.First.Value.Segment.transform));
+        public void AddGrowth(int amount) {
+            _growth += amount;
         }
 
-        public void HandleReskin(object sender, ReskinEventArgs args) {
-            _data.ViewData.Sprites = args.Sprites;
+        public void HandleReskin(object sender, SnakeCreatedEventArgs args) {
+            _data.ViewData.Sprites = args.Skin; 
+            canDraw = true;
             Draw();
         }
 
         public void Draw() {
+            if (!canDraw) return;
             for (var segment = _data.Segments.First; segment != null; segment = segment.Next) {
                 segment.Value.Segment.transform.position = GameManager.Instance.Level.CenterInCell(segment.Value.ModelPosition);
 
@@ -65,6 +65,11 @@ namespace ExtremeSnake.Game.Snakes
             }
             LevelPosition claimed = new LevelPosition(_data.Segments.First.Value.ModelPosition,_data.Segments.First.Value.Segment.layer);
             GameManager.Instance.GameEmitter.Emit("OnSnakePositionsChanged",this,new SnakeMoveEventArgs(claimed,released));
+
+            if (_growth > 0) {
+                _growth--;
+                ChangeLength(1);
+            }
         }
 
         public void ChangeLength(int amount) {
@@ -104,7 +109,7 @@ namespace ExtremeSnake.Game.Snakes
         }
         private SnakeSegment CreateSegment(GameObject prefab,Vector2Int position, int layer) {
             GameObject segment = GameObject.Instantiate(prefab);
-            segment.transform.localScale = GameManager.Instance.Level.Grid.cellSize;
+            segment.transform.localScale = GameManager.Instance.Level.Grid.cellSize * 1.01f;
             segment.transform.parent = _data.SnakeTransform;
             segment.transform.position = GameManager.Instance.Level.CenterInCell(position);
             segment.layer = layer;

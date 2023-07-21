@@ -9,5 +9,6 @@ namespace ExtremeSnake.Game.Snakes
         void OnChangeDirection(Vector2 inputDirection);
         void HandleEat(object sender, EatEventArgs args);
         void OnMove();
+        void HandleHunger();
     }
 }

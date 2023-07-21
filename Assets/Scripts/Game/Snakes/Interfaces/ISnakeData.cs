@@ -6,6 +6,7 @@ namespace ExtremeSnake.Game.Snakes
 {
     public interface ISnakeData
     {
+        string UUID { get; }
         SnakeViewData ViewData { get; set; }
         int StartingLength { get; }
         LinkedList<SnakeSegment> Segments { get; set; }
@@ -13,5 +14,6 @@ namespace ExtremeSnake.Game.Snakes
         Transform SnakeTransform { get; }
         EventEmitter SnakeEmitter { get; }
         List<LevelPosition> ExtractSegmentPositions();
+        int Fullness { get; set; }
     }
 }

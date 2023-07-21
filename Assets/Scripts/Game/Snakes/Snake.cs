@@ -16,35 +16,30 @@ namespace ExtremeSnake.Game.Snakes
         private GameObject _bodyPrefab;
         [SerializeField]
         private SnakeSprites _sprites;
-        //[SerializeField]
-        //[Range(2,10)]
-        //private int _startingLength;
         public SnakeStartingDirections InitialDirection { get; set; }
 
         //implement ISnakeData
+        public string UUID { get; } = Guid.NewGuid().ToString();
         public SnakeViewData ViewData { get; set; }
-
-        //public int StartingLength { get { return _startingLength; } set { _startingLength = value; } }
         public int StartingLength { get { return GameManager.Instance.Settings.DifficultySettings.SnakeDifficulty.SnakeStartingLength; } }
         public LinkedList<SnakeSegment> Segments { get; set; } = new LinkedList<SnakeSegment>();
         public Vector2 MoveDirection { get; set; }
         public Transform SnakeTransform { get { return gameObject.transform; } }
         public EventEmitter SnakeEmitter { get; private set; }
+        public int Fullness { get; set; }
 
         //private properties
         private ISnakeLogic _snakeLogic { get; set; }
         private ISnakeModel _snakeModel;
-
 
         private void Start() {
             Vector2Int spawnPoint = (Vector2Int)GameManager.Instance.Level.Grid.WorldToCell(gameObject.transform.position);
             ViewData = new SnakeViewData(_headPrefab,_bodyPrefab,_sprites);
 
             MoveDirection = ReduceSnakeStartingDirections(InitialDirection);
-
             _snakeModel = new SnakeModel(this,spawnPoint,gameObject.layer);
             _snakeLogic = new SnakeLogic(this,_snakeModel);
-            SnakeEmitter.Emit("OnSnakeCreated",this);
+            SnakeEmitter.Emit("OnSnakeStartComplete",this);
         }
 
         public void EnableSnake(object sender) {
@@ -58,8 +53,11 @@ namespace ExtremeSnake.Game.Snakes
         }
 
         public void HandleTick(object sender) {
-            if (SnakeEmitter != null)
+            if (SnakeEmitter != null) {
                 _snakeLogic.OnMove();
+                _snakeLogic.HandleHunger();
+            }
+
         }
         public void HandleChangeDirection(object sender, ControllerEventArgs args) {
             _snakeLogic.OnChangeDirection(args.Direction);
