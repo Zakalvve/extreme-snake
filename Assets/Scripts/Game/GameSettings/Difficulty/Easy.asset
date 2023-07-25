@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Easy Peasy
   SnakeDifficulty:
-    SnakeSpeed: 3
-    SnakeStartingLength: 3
+    SnakeSpeed: 4
+    SnakeStartingLength: 12
     NumberRepeatedFailsAllowed: 0
-    ShrinkTimerLength: 15
-    InitialGraceLength: 11
+    ShrinkTimerLength: 11
+    InitialGraceLength: 10
   FoodScarcity:
-    FoodSpawnRate: 25
+    FoodSpawnRate: 13
     MaxFood: 0

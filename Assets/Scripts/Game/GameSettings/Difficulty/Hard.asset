@@ -15,10 +15,10 @@ MonoBehaviour:
   Name: Hard
   SnakeDifficulty:
     SnakeSpeed: 7
-    SnakeStartingLength: 10
+    SnakeStartingLength: 7
     NumberRepeatedFailsAllowed: 8
-    ShrinkTimerLength: 10
-    InitialGraceLength: 13
+    ShrinkTimerLength: 8
+    InitialGraceLength: 19
   FoodScarcity:
-    FoodSpawnRate: 16
-    MaxFood: 18
+    FoodSpawnRate: 18
+    MaxFood: 6

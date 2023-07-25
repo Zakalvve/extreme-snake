@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3140a03105bee78449fcfd231a157731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GrowthValue: 2
-  PointsValue: 15
+  GrowthValue: 3
+  PointsValue: 25
 --- !u!61 &5429078367135210911
 BoxCollider2D:
   m_ObjectHideFlags: 0

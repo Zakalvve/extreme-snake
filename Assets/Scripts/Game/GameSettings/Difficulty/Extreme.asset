@@ -15,10 +15,10 @@ MonoBehaviour:
   Name: Extreme
   SnakeDifficulty:
     SnakeSpeed: 10
-    SnakeStartingLength: 16
+    SnakeStartingLength: 7
     NumberRepeatedFailsAllowed: 4
-    ShrinkTimerLength: 8
-    InitialGraceLength: 14
+    ShrinkTimerLength: 7
+    InitialGraceLength: 25
   FoodScarcity:
-    FoodSpawnRate: 16
-    MaxFood: 18
+    FoodSpawnRate: 20
+    MaxFood: 5
