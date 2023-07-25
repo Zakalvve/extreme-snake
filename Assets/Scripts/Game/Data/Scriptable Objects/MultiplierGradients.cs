@@ -1,6 +1,5 @@
 ﻿using TMPro;
 using UnityEngine;
-using ExtremeSnake.Utils;
 
 namespace ExtremeSnake.Game.UI
 {
@@ -15,8 +14,15 @@ namespace ExtremeSnake.Game.UI
         public TMP_ColorGradient ThirtyTwo;
         public TMP_ColorGradient SixtyFour;
 
+        public Color DefaultColor;
+        public Color TwoColor;
+        public Color FourColor;
+        public Color EightColor;
+        public Color SixteenColor;
+        public Color ThirtyTwoColor;
+        public Color SixtyFourColor;
+
         public TMP_ColorGradient GetGradient(int multiplier) {
-            multiplier = UtilsClass.FloorPower2(multiplier);
             switch (multiplier) {
                 case 2:
                     return Two;
@@ -32,6 +38,27 @@ namespace ExtremeSnake.Game.UI
                     return SixtyFour;
                 default:
                     return Default;
+            }
+        }
+
+        public Color GetFlatColor(int multiplier) {
+            switch (multiplier) {
+                case 1:
+                    return Color.white;
+                case 2:
+                    return TwoColor;
+                case 4:
+                    return FourColor;
+                case 8:
+                    return EightColor;
+                case 16:
+                    return SixteenColor;
+                case 32:
+                    return ThirtyTwoColor;
+                case 64:
+                    return SixtyFourColor;
+                default:
+                    return DefaultColor;
             }
         }
     }
