@@ -9,6 +9,14 @@ namespace ExtremeSnake.Utils
 {
     public class UtilsClass
     {
+        public static (int, int) SecondsToMinutesAndSeconds(int timeInSeconds) {
+            return (timeInSeconds / 60, timeInSeconds % 60);
+        }
+
+        public static string FormatTime(int minutes, int seconds) {
+            return String.Format("{0}:{1:00}",minutes,seconds);
+        }
+
         public static int FloorPower2(int x) {
             if (x < 1) {
                 return 1;
