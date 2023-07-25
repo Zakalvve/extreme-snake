@@ -1,11 +1,8 @@
-using ExtremeSnake.Game;
+using Assets.Scripts.Game.Controllers;
 using ExtremeSnake.Game.Data;
-using ExtremeSnake.Game.Food;
-using ExtremeSnake.Game.Snakes;
-using System.Collections;
-using System.Collections.Generic;
+using ExtremeSnake.Game.Levels;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 
 namespace ExtremeSnake.Game.Snakes
 {
@@ -23,36 +20,49 @@ namespace ExtremeSnake.Game.Snakes
             _model.Draw();
             _data.SnakeEmitter.Subscribe<EatEventArgs>("OnEat",HandleEat);
 
-            difficulty = GameManager.Instance.Settings.DifficultySettings.SnakeDifficulty;
+            difficulty = GameManager.Instance.Settings.ActiveSession.DifficultySettings.SnakeDifficulty;
             _data.Fullness = difficulty.InitialGraceLength + difficulty.ShrinkTimerLength;
         }
 
-        public void OnMove() {
+        public bool OnMove() {
             if (NewDirection != Vector2.zero) {
                 NewDirection = _model.UpdateDirection(NewDirection);
             }
             //if (GameManager.Instance.Level.IsMoveValid(Vector2Int.RoundToInt(_model.HeadPosition + _model.MoveDirection), _data.Segments.First.Value.Segment.layer)) {
             if (GameManager.Instance.Level.IsMoveValid(GameManager.Instance.Level.CenterInCell(Vector2Int.RoundToInt(_model.HeadPosition)),_model.MoveDirection,GameManager.Instance.Level.Grid.cellSize.x, _data.Segments.First.Value.Segment.layer)) {
                 _model.Move();
+                _data.LockMovement = false;
             }
             else {
-                _model.ChangeLength(-1);
-                _data.SnakeEmitter.Emit("ScoreOnShrink",this, new ScoreEventArgs(_data.UUID));
+                if (!_model.ChangeLength(-1)) {
+                    return false;
+                }
+                if (!_data.LockMovement) {
+                    _data.LockMovement = true;
+                    _data.LockDirection = _data.Segments.First.Value.ModelPosition - _data.Segments.First.Next.Value.ModelPosition;
+                }
+                _data.SnakeEmitter.Emit("ScoreOnShrink",this, new StringEventArgs(_data.UUID));
             }
             _model.Draw();
+            return true;
         }
 
-        public void HandleHunger() {
+        public bool HandleHunger() {
             _data.Fullness--;
             if (_data.Fullness == 0) {
-                _model.ChangeLength(-1);
+                if (!_model.ChangeLength(-1,true)) {
+                    return false;
+                }
                 _data.Fullness = difficulty.ShrinkTimerLength;
             }
+            return true;
         }
 
         public void OnChangeDirection(Vector2 inputDirection) {
-            if (_model.MoveDirection * -1 != inputDirection) {
+            Vector2 comparissonDir = _data.LockMovement ? _data.LockDirection : _model.MoveDirection;
+            if (comparissonDir * -1 != inputDirection) {
                 NewDirection = inputDirection;
+                _data.SnakeEmitter.Emit("FinalSnakeDirection",this,new ControllerEventArgs(NewDirection));
             }
         }
 

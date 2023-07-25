@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.Game.Controllers;
 using ExtremeSnake.Core;
-using ExtremeSnake.Game.Food;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +19,18 @@ namespace ExtremeSnake.Game.Snakes
 
         //implement ISnakeData
         public string UUID { get; } = Guid.NewGuid().ToString();
+        public string Name { get; set; }
         public SnakeViewData ViewData { get; set; }
-        public int StartingLength { get { return GameManager.Instance.Settings.DifficultySettings.SnakeDifficulty.SnakeStartingLength; } }
+        public int StartingLength { get { return GameManager.Instance.Settings.ActiveSession.DifficultySettings.SnakeDifficulty.SnakeStartingLength; } }
         public LinkedList<SnakeSegment> Segments { get; set; } = new LinkedList<SnakeSegment>();
         public Vector2 MoveDirection { get; set; }
         public Transform SnakeTransform { get { return gameObject.transform; } }
         public EventEmitter SnakeEmitter { get; private set; }
         public int Fullness { get; set; }
-
+        public bool IsAlive { get; set; }
+        public bool Invulnerable { get; set; }
+        public bool LockMovement { get; set; } = false;
+        public Vector2 LockDirection { get; set; }
         //private properties
         private ISnakeLogic _snakeLogic { get; set; }
         private ISnakeModel _snakeModel;
@@ -54,8 +57,8 @@ namespace ExtremeSnake.Game.Snakes
 
         public void HandleTick(object sender) {
             if (SnakeEmitter != null) {
-                _snakeLogic.OnMove();
-                _snakeLogic.HandleHunger();
+                if (!_snakeLogic.OnMove()) return;
+                if (!_snakeLogic.HandleHunger()) return;
             }
 
         }
@@ -80,6 +83,10 @@ namespace ExtremeSnake.Game.Snakes
             return Segments.Select(segment => {
                 return new LevelPosition(segment.ModelPosition, segment.Segment.layer);
             }).ToList();
+        }
+
+        public void RemoveAll() {
+            _snakeModel.Clear();
         }
     }
 

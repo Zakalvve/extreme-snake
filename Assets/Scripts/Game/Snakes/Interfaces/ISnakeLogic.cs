@@ -1,4 +1,4 @@
-﻿using ExtremeSnake.Game.Food;
+﻿using ExtremeSnake.Game.Levels;
 using UnityEngine;
 
 namespace ExtremeSnake.Game.Snakes
@@ -8,7 +8,7 @@ namespace ExtremeSnake.Game.Snakes
         Vector2 NewDirection { get; set; }
         void OnChangeDirection(Vector2 inputDirection);
         void HandleEat(object sender, EatEventArgs args);
-        void OnMove();
-        void HandleHunger();
+        bool OnMove();
+        bool HandleHunger();
     }
 }

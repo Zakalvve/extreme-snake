@@ -7,10 +7,11 @@ namespace ExtremeSnake.Game.Snakes
         Vector2 HeadPosition { get; }
         Vector2 MoveDirection { get; }
 
-        void ChangeLength(int amount);
+        bool ChangeLength(int amount, bool releaseSegment = false);
         void Draw();
         void Move();
         Vector2 UpdateDirection(Vector2 newDirection);
-        public void AddGrowth(int amount);
+        void AddGrowth(int amount);
+        void Clear();
     }
 }

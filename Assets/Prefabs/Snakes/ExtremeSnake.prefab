@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8058597237729159822}
   - component: {fileID: 1019396994}
   - component: {fileID: 1019396997}
+  - component: {fileID: -366405215587092989}
+  - component: {fileID: 5417161650426466213}
   m_Layer: 6
   m_Name: ExtremeSnake
   m_TagString: Untagged
@@ -94,3 +96,34 @@ MonoBehaviour:
   m_DefaultActionMap: SnakeControls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-366405215587092989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8058597237729159821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b37dfa85711fe454e887e2d4f9e40bc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TotalDuration: 1.9
+  Flashes: 6
+  StartAlpha: 1
+  EndAlpha: 0.3
+--- !u!114 &5417161650426466213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8058597237729159821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daadc79a762885e4b8050e4c5b258369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FloatingTextPrefab: {fileID: 7510750846012948454, guid: 1f6bd314b8fcfd84094e46ecf397b2a4, type: 3}
+  Parent: {fileID: 0}
+  HeightScale: 1
