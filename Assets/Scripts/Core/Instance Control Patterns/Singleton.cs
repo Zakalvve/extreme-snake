@@ -8,6 +8,7 @@ namespace ExtremeSnake.Core
 
         protected virtual void Awake() {
             if (Instance != null && Instance != this as T) {
+                GameObject.Destroy(this.gameObject);
                 Destroy(this);
                 return;
             }
