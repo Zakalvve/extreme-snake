@@ -18,6 +18,9 @@ namespace ExtremeSnake.Game.UI
                 component.gameObject.SetActive(false);
             }
             GameManager.Instance.GameEmitter.Subscribe<SnakeCreatedEventArgs>("SnakeCreated",HandleSnakeCreated);
+            GameManager.Instance.GameEmitter.Subscribe("OnPostGame",(object sender) => {
+                gameObject.SetActive(false);
+            });
         }
 
         public void HandleSnakeCreated(object sender, SnakeCreatedEventArgs args) {

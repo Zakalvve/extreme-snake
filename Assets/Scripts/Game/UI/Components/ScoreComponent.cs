@@ -10,21 +10,19 @@ namespace ExtremeSnake.Game.UI
 {
     public class ScoreComponent : MonoBehaviour
     {
-        public MultiplierGradients gradients;
-
         public Text Name;
         public TextMeshProUGUI Score;
         public TextMeshProUGUI Multiplier;
 
         public void InitializeComponent(SnakeCreatedEventArgs args) {
             Name.text = args.Name;
-
-            Score.text = $"{args.Score.Score}";
+             
+            Score.text = string.Format("{0:N0}",args.Score.Score);
 
             if (args.Score.Multiplier < 2) Multiplier.enabled = false;
             else {
                 Multiplier.enabled = true;
-                Multiplier.colorGradientPreset = gradients.GetGradient(args.Score.Multiplier);
+                Multiplier.colorGradientPreset = GameManager.Instance.GlobalGradients.GetGradient(args.Score.Multiplier);
                 Multiplier.text = $"x{args.Score.Multiplier}";
             }
 
@@ -33,12 +31,12 @@ namespace ExtremeSnake.Game.UI
         }
 
         public void HandleScoreChanged(object sender, ScoreEventArgs args) {
-            Score.text = $"{args.Score.Score}";
+            Score.text = string.Format("{0:N0}",args.Score.Score);
 
             if (args.Score.Multiplier < 2) Multiplier.enabled = false;
             else {
                 Multiplier.enabled = true;
-                Multiplier.colorGradientPreset = gradients.GetGradient(args.Score.Multiplier);
+                Multiplier.colorGradientPreset = args.MultiplierColors.GetGradient(args.Score.Multiplier);
                 Multiplier.text = $"x{args.Score.Multiplier}";
             }
         }
