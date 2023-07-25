@@ -7,7 +7,7 @@ public class ControllerSettings
     //A higher order function which attaches the IController to the supplied gameobject
     public Func<GameObject,IController> AttachControllerToGameObject { get; private set; }
     //The players this controller will process input from
-    public List<ControllingEntitySettings> Entities = new List<ControllingEntitySettings>();
+    public List<Actor> Pawns = new List<Actor>();
 
     //Creates the higher order function by attaching the monobehaviour, IController T to the supplied gameobject
     public void CreateAttachAction<T>() where T : MonoBehaviour, IController {

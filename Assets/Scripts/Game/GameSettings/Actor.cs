@@ -5,14 +5,14 @@ using UnityEngine;
 
 //Stores the settings applicable to controlling entities. That is any entity that controls a snake. Either a player or an AI script.
 [System.Serializable]
-public class ControllingEntitySettings
+public class Actor
 {
-	public ParticipantType EntityType;
-	public ControllingEntitySettings() { }
-	public ControllingEntitySettings(SnakeSprites skin, string name,ParticipantType type) {
+	public ParticipantType ActorType;
+	public Actor() { }
+	public Actor(SnakeSprites skin, string name,ParticipantType type) {
 		Skin = skin;
 		Name = name;
-		EntityType = type;
+		ActorType = type;
 	}
     public SnakeSprites Skin { get { return _skin; } set { _skin = value; } }
 
@@ -20,4 +20,8 @@ public class ControllingEntitySettings
 	private SnakeSprites _skin;
 
 	public string Name { get; set; } = "";
+
+	public IController ActorControls;
+	public Snake ActorSnake;
+	public SnakeScore ActorScore;
 }
