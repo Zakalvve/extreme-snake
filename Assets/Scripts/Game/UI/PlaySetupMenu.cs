@@ -73,12 +73,17 @@ public class PlaySetupMenu : MonoBehaviour
 
     //gather data and start game
     public void OnPlayGame() {
-        GameManager.Instance.Settings.DifficultySettings = DifficultyOptions.Where(item => item.Name == SelectedDifficultyName).First();
-        GameManager.Instance.Settings.SnakeControllingEntity = _playerComponents
+        //int chosenDuration = 0;
+        List<Actor> chosenActors = _playerComponents
             .Select(component => component.GetComponent<MenuPlayerComponent>())
             .Where(component => component.IsPlayerActive)
             .Select(component => component.GetOutput())
             .ToList();
+        Difficulty chosenDifficulty = DifficultyOptions.Where(item => item.Name == SelectedDifficultyName).First();
+
+        //Session generatedSession = new Session(chosenDuration, chosenActors,chosenDifficulty);
+        SessionData generatedSession = new SessionData(chosenActors,chosenDifficulty);
+        GameManager.Instance.Settings.ActiveSession = generatedSession;
 
         GameManager.Instance.GameEmitter.Emit("OnLoadGame",this,new LoadLevelArgs(Levels[SelectedLevelIndex]));
     }

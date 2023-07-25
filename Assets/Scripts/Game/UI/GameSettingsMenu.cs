@@ -24,10 +24,10 @@ public class GameSettingsMenu : MonoBehaviour
     }
 
     public void OnActive() {
-        _volumeSlider.value = GameManager.Instance.Settings.Volume;
+        _volumeSlider.value = GameManager.Instance.Settings.AudioSettings.Volume;
         
-        bool musicToggle = GameManager.Instance.Settings.PlayMusic;
-        bool sfxToggle = GameManager.Instance.Settings.PlaySoundFX;
+        bool musicToggle = GameManager.Instance.Settings.AudioSettings.PlayMusic;
+        bool sfxToggle = GameManager.Instance.Settings.AudioSettings.PlaySoundFX;
 
         MusicToggleOn.SetActive(musicToggle);
         MusicToggleOff.SetActive(!musicToggle);
@@ -37,20 +37,20 @@ public class GameSettingsMenu : MonoBehaviour
     }
 
     public void OnVolumeSliderChanged() {
-        GameManager.Instance.Settings.Volume = (int)_volumeSlider.value;
+        GameManager.Instance.Settings.AudioSettings.Volume = (int)_volumeSlider.value;
     }
 
     public void TogglePlaySFX() {
-        GameManager.Instance.Settings.PlaySoundFX = !GameManager.Instance.Settings.PlaySoundFX;
+        GameManager.Instance.Settings.AudioSettings.PlaySoundFX = !GameManager.Instance.Settings.AudioSettings.PlaySoundFX;
     }
 
     public void TogglePlayMusic() {
-        GameManager.Instance.Settings.PlayMusic = !GameManager.Instance.Settings.PlayMusic;
+        GameManager.Instance.Settings.AudioSettings.PlayMusic = !GameManager.Instance.Settings.AudioSettings.PlayMusic;
     }
 
     public void DebugSettingsValues(object sender) {
-        Debug.Log($"Volume Level: {GameManager.Instance.Settings.Volume}");
-        Debug.Log($"Play Music: {(GameManager.Instance.Settings.PlayMusic ? "Yes" : "No")}");
-        Debug.Log($"Play Sound FX: {(GameManager.Instance.Settings.PlaySoundFX ? "Yes" : "No")}");
+        Debug.Log($"Volume Level: {GameManager.Instance.Settings.AudioSettings.Volume}");
+        Debug.Log($"Play Music: {(GameManager.Instance.Settings.AudioSettings.PlayMusic ? "Yes" : "No")}");
+        Debug.Log($"Play Sound FX: {(GameManager.Instance.Settings.AudioSettings.PlaySoundFX ? "Yes" : "No")}");
     }
 }

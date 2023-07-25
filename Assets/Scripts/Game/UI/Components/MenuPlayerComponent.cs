@@ -76,8 +76,8 @@ public class MenuPlayerComponent : MonoBehaviour
         SetReadyIcons();
     }
 
-    public ControllingEntitySettings GetOutput() {
-        return new ControllingEntitySettings(SkinOptions[SelectedSkin],Name,PlayerType);
+    public Actor GetOutput() {
+        return new Actor(SkinOptions[SelectedSkin],Name,PlayerType);
     }
 
     public void OnNextSkin() {
