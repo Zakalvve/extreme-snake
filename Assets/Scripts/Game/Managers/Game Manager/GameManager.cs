@@ -1,29 +1,21 @@
-using System.Collections.Generic;
-using UnityEngine;
 using ExtremeSnake.Core;
 using ExtremeSnake.Game.Levels;
-using ExtremeSnake.Game.Food;
-using ExtremeSnake.Game.Snakes;
+using ExtremeSnake.Game.UI;
 
 namespace ExtremeSnake.Game
 {
     //Make a State Machine
     public class GameManager : Singleton<GameManager>, IStateful<IMonobehaviourState>
     {
-        public SnakeSprites defaultSkin;
         //for development and starting from various non default entry points
         public StartingState startingState;
         public static bool isDevelopment = true;
-
         private IMonobehaviourState _state;
-
         public EventEmitter GameEmitter { get; private set; }
-
         public GameSettings Settings;
-
-        public Level Level { get; set; }
-
-        public List<IController> _controllers;
+        private AudioController AudioControls;
+        public MultiplierGradients GlobalGradients;
+        public Level Level { get { return Settings.ActiveSession.SessionLevel; } }
 
         protected override void Awake() {
             base.Awake();
@@ -33,6 +25,8 @@ namespace ExtremeSnake.Game
                 _state = new MenuState(this);
             else
                 _state = new LoadingLevelState(this);
+
+            AudioControls = GetComponentInChildren<AudioController>();
 
             _state.TransitionTo();
         }
@@ -51,9 +45,11 @@ namespace ExtremeSnake.Game
         public void ChangeState(IMonobehaviourState state) {
             _state = state;
             _state.TransitionTo();
+            AudioControls.Initialize();
         }
     }
 
+    //for developmenmt
     public enum StartingState {
         MENU,
         GAME

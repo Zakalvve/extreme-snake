@@ -40,7 +40,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 114663357}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 50eefbdd3084c2b43b7ec06116183738, type: 3}
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae7df5e8e6909e740bde2fb2d6dd831a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Source: {fileID: 0}
+  Source: {fileID: 114663359}
 --- !u!1 &1324905408488676928
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,6 +152,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1324905408488676930}
   - component: {fileID: 8674340033055302967}
+  - component: {fileID: 6395929220062338483}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -187,11 +188,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c339226d2fbc644aca895271323083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingState: 0
+  startingState: 1
   Settings:
-    _volume: 50
-    _playMusic: 1
-    _playSoundFX: 1
-    BaseEntityControllerPrefab: {fileID: 3261442853206872116, guid: 9c9c46c689978b44ea7bdfa2739a819a, type: 3}
-    ExtremeSnakePrefab: {fileID: 8058597237729159821, guid: 4a3486453a2e7b844bb3187104587f8f, type: 3}
-    DifficultySettings: {fileID: 11400000, guid: fadcdabf7332969488cb01157d77a3d0, type: 2}
+    DefaultController: {fileID: 3261442853206872116, guid: 9c9c46c689978b44ea7bdfa2739a819a, type: 3}
+    DefaultSnake: {fileID: 8058597237729159821, guid: 4a3486453a2e7b844bb3187104587f8f, type: 3}
+    DefaultSkin: {fileID: 11400000, guid: 9835fe3d9ef7b9241927e4fd2f7100b3, type: 2}
+    DefaultDifficulty: {fileID: 11400000, guid: fadcdabf7332969488cb01157d77a3d0, type: 2}
+    AudioSettings:
+      _volume: 10
+      _playMusic: 1
+      _playSoundFX: 1
+  GlobalGradients: {fileID: 11400000, guid: ef48d68f58999874e856bc949df33911, type: 2}
+--- !u!114 &6395929220062338483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324905408488676928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9552196b6cc954886f881f6023c5a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
