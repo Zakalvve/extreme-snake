@@ -15,6 +15,7 @@ namespace ExtremeSnake.Game
             other.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = sortingLayer;
             SpriteRenderer[] srs = other.gameObject.GetComponentsInChildren<SpriteRenderer>();
             foreach (SpriteRenderer sr in srs) {
+                if (sr.tag == "Ignore") continue;
                 sr.sortingLayerName = sortingLayer;
             }
         }

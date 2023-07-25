@@ -1,20 +1,19 @@
-using ExtremeSnake.Game.Food;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System.Linq;
 using Assets.Scripts.Core;
 using Assets.Scripts.Levels;
-using static UnityEditor.Experimental.GraphView.GraphView;
 using ExtremeSnake.Utils;
 using ExtremeSnake.Game.Snakes;
 using ExtremeSnake.Game.Data;
+using System;
 
 namespace ExtremeSnake.Game.Levels
 {
     [RequireComponent(typeof(Grid))]
     public class Level : InstanceTracker<Level>// MonoBehaviour
     {
+        public GameObject debugGO;
         public Grid Grid;
         public LevelFood foodInLevel;
         public int spawnFrequency = 0;
@@ -22,14 +21,13 @@ namespace ExtremeSnake.Game.Levels
         private Dictionary<int, LevelLayer> _layers = new Dictionary<int, LevelLayer>();
         private List<SnakeSpawnPointStatus> _snakeSpawners;
         private FoodSpawner _foodSpawner;
-
-        //globalSnakeSpeed; cells per second
-        //snakeSpeed = globalSnakeSpeed * snakeSpeedModifiers;
+        private float elapsed = 0f;
+        public bool debug = false;
 
         protected override void Awake() {
             base.Awake();
             Grid = GetComponent<Grid>();
-            //Layers = new List<LevelLayer>(GetComponentsInChildren<LevelLayer>());
+            Layers = new List<LevelLayer>(GetComponentsInChildren<LevelLayer>());
             GetComponentsInChildren<LevelLayer>().ToList().ForEach(layer => {
                 _layers.Add(layer.gameObject.layer,layer);
             });
@@ -40,6 +38,31 @@ namespace ExtremeSnake.Game.Levels
             GameManager.Instance.GameEmitter.Subscribe("OnTick",Tick);
             GameManager.Instance.GameEmitter.Subscribe<SnakeMoveEventArgs>("OnSnakePositionsChanged",UpdateWalkables);
             GameManager.Instance.GameEmitter.Emit("OnLevelStartComplete",this);
+            GameManager.Instance.GameEmitter.Subscribe("OnLoadComplete",(object sender) => {
+                for (int i = 0; i < 0; i++) {
+                    try {
+                        (string layer, Vector2Int cell) = GetRandomWalkableCell();
+                        _foodSpawner.Spawn(layer,cell);
+                        _layers[LayerMask.NameToLayer(layer)].RegisterPositionNotWalkable((Vector3Int)cell);
+                    } catch (Exception e) {
+                        Debug.LogWarning($"Caught and recovered from error. {e}");
+                    }
+                }
+            });
+        }
+
+        private void Update() {
+            elapsed += Time.deltaTime;
+            if (elapsed > 0.05f) {
+                DrawDebug();
+                elapsed = 0f;
+            }
+        }
+
+        [ContextMenu("Debug")]
+        public void DrawDebug() {
+            Layers[0].DrawDebug(debugGO,this,Color.red,debug);
+            Layers[1].DrawDebug(debugGO,this,Color.blue,debug);
         }
 
         public ISpawner GetSnakeSpawner() {
@@ -55,11 +78,27 @@ namespace ExtremeSnake.Game.Levels
 
         public void Tick(object sender) {
             spawnFrequency++;
-            if (spawnFrequency > 15) {
-                (string layer, Vector2Int cell) = GetRandomWalkableCell();
-                _foodSpawner.Spawn(layer, cell);
+            FoodDifficulty diff = GameManager.Instance.Settings.ActiveSession.DifficultySettings.FoodScarcity;
+            int numActors = GameManager.Instance.Settings.ActiveSession.Actors.Count;
+            int numFoodInLevel = InstanceTracker<Food>.Instances.Count;
+            if (spawnFrequency > diff.FoodSpawnRate - (3 * (numActors - 1))) {
+                if (numFoodInLevel < (diff.MaxFood*numActors)
+                 || diff.MaxFood == 0
+                ) {
+                    try {
+                        (string layer, Vector2Int cell) = GetRandomWalkableCell();
+                        _foodSpawner.Spawn(layer,cell);
+                        _layers[LayerMask.NameToLayer(layer)].RegisterPositionNotWalkable((Vector3Int)cell);
+                    } catch (Exception e) {
+                        Debug.LogWarning($"Caught and recovered from error. {e}");
+                    }
+                }
+                else {
+                    Debug.Log("Max food reached");
+                }
                 spawnFrequency = 0;
             }
+            
         }
 
         public Vector2 CenterInCell(int x,int y) {
@@ -72,19 +111,11 @@ namespace ExtremeSnake.Game.Levels
             return Grid.CellToWorld(new Vector3Int(cell.x,cell.y,1)) + Grid.cellSize / 2;
         }
 
-        
-        //MUST be changed risk of inifinite loop??!!
+        //can throw error if there is no walkable spaces left
         public (string, Vector2Int) GetRandomWalkableCell() {
-            //risk of infinite loop!!
             Vector2Int randomCell;
-            //LevelLayer randomlayer = _layers[Random.Range(0,_layers.Count)];
             LevelLayer randomlayer = UtilsClass.RandomElement(_layers.Select(kvp => kvp.Value));
-
-
-            do {
-                randomCell = (Vector2Int)randomlayer.GetRandomWalkablePosition();
-            } while (!IsCellValid(randomCell));
-
+            randomCell = (Vector2Int)randomlayer.GetRandomWalkablePosition();
             return (LayerMask.LayerToName(randomlayer.gameObject.layer),randomCell);
         }
 
@@ -106,7 +137,6 @@ namespace ExtremeSnake.Game.Levels
             return _layers[layer].IsPositionWalkable((Vector3Int)fromPos);
         }
 
-        #region UpdateToRemoveUseOfRaycast
         public bool IsMoveValid(Vector2 fromPos,Vector2 dir,float distance,int layer) {
             //raycast in the move direction to check if the new cell is valid to move into
             int layerMask = (1 << layer | 1 << LayerMask.NameToLayer("Solid"));
@@ -123,10 +153,15 @@ namespace ExtremeSnake.Game.Levels
         public bool IsCellValid(Vector2Int cell) {
             Vector3 cellWorld = CenterInCell(cell);
             Ray ray = new Ray(Camera.main.transform.position,cellWorld - Camera.main.transform.position);
-            if (Physics2D.GetRayIntersection(ray)) return false;
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+            if (hit.collider != null) {
+                //debug.Add(() => Debug.DrawRay(Camera.main.transform.position,cellWorld - Camera.main.transform.position,Color.red));
+                return false;
+            } else {
+                //debug.Add(() => Debug.DrawRay(Camera.main.transform.position,cellWorld - Camera.main.transform.position,Color.green));
+            }
             return true;
         }
-        #endregion
     }
 
     //used to track which spawn points have and haven't been allocated to snakes

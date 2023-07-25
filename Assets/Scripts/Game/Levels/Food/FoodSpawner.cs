@@ -1,9 +1,7 @@
-using ExtremeSnake.Game.Snakes;
 using System.Linq;
-using UnityEditor.UIElements;
 using UnityEngine;
 
-namespace ExtremeSnake.Game.Food
+namespace ExtremeSnake.Game.Levels
 {
     public class FoodSpawner : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Assets.Scripts.Core;
 
-namespace ExtremeSnake.Game.Food
+namespace ExtremeSnake.Game.Levels
 {
     public class Food : InstanceTracker<Food>
     {
@@ -12,7 +12,13 @@ namespace ExtremeSnake.Game.Food
             base.Awake();
         }
         void Start() {
-            transform.position = GameManager.Instance.Level.CenterInCell(Vector3Int.FloorToInt(transform.position));
+            if (GameManager.Instance.Level == null) {
+                GameManager.Instance.GameEmitter.Subscribe("OnLevelStartComplete",(object sender) => {
+                    transform.position = GameManager.Instance.Level.CenterInCell(Vector3Int.FloorToInt(transform.position));
+                });
+            } else {
+                transform.position = GameManager.Instance.Level.CenterInCell(Vector3Int.FloorToInt(transform.position));
+            }
         }
     }
 }

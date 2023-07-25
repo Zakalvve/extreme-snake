@@ -13,7 +13,6 @@ public class SnakeSpawner : InstanceTracker<SnakeSpawner>, ISpawner
         var go = GameObject.Instantiate(prefab);
         go.transform.position = gameObject.transform.position;
         go.GetComponent<Snake>().InitialDirection = SpawnDirection;
-
         go.layer = LayerMask.NameToLayer(SpawnLayerName);
         return go;
     }
