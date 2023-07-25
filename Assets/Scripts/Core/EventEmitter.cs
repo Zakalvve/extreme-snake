@@ -39,7 +39,7 @@ namespace ExtremeSnake.Core
             if (!_events.ContainsKey(eventName)) return;
             EventHandler<EventArgs> handler = _events[eventName];
             if (_debug) Debug.Log($"Emiting event {eventName} from {sender}");
-            handler.Invoke(sender,EventArgs.Empty);
+            handler?.Invoke(sender,EventArgs.Empty);
         }
 
         /// <summary>
