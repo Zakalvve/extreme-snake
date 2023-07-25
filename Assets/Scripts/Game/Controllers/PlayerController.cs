@@ -1,8 +1,10 @@
 using Assets.Scripts.Game.Controllers;
 using ExtremeSnake.Core;
 using ExtremeSnake.Game;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 
 //The default controller for a single player
@@ -18,6 +20,8 @@ public class PlayerController : MonoBehaviour, IController
     private InputAction _left;
     private InputAction _right;
     private InputAction _pause;
+    private InputAction _enter;
+    private InputAction _escape;
 
     protected virtual void Awake() {
         PlayerInput = GetComponent<PlayerInput>();
@@ -41,13 +45,19 @@ public class PlayerController : MonoBehaviour, IController
         _down = PlayerInput.actions["Down"];
         _left = PlayerInput.actions["Left"];
         _right = PlayerInput.actions["Right"];
+
         _pause = PlayerInput.actions["Pause"];
+        _enter = PlayerInput.actions["Enter"];
+        _escape = PlayerInput.actions["Escape"];
 
         _up.performed += context => MoveUp(context, (int)Player.PLAYER_1);
         _down.performed += context => MoveDown(context, (int)Player.PLAYER_1);
         _left.performed += context => MoveLeft(context, (int)Player.PLAYER_1);
         _right.performed += context => MoveRight(context ,(int)Player.PLAYER_1);
+
         _pause.performed += PauseGame;
+        _enter.performed += Enter;
+        _escape.performed += Escape;
     }
 
     protected void MoveUp(InputAction.CallbackContext context, int playerIndex) {
@@ -81,6 +91,17 @@ public class PlayerController : MonoBehaviour, IController
     }
     private void PauseGame(InputAction.CallbackContext context) {
         GameManager.Instance.GameEmitter.Emit("OnPause",this);
+    }
+
+    private void Enter(InputAction.CallbackContext context) {
+        GameManager.Instance.GameEmitter.Emit("OnEnter",this);
+    }
+    private void Escape(InputAction.CallbackContext context) {
+        GameManager.Instance.GameEmitter.Emit("OnEscape",this);
+    }
+
+    public GameObject GetGameObject() {
+        return gameObject;
     }
 
     public enum Player
