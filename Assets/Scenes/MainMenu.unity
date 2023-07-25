@@ -191,14 +191,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 1324905408488676929, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: Settings._volume
-      value: 48
-      objectReference: {fileID: 0}
-    - target: {fileID: 1324905408488676929, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: Settings._playMusic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1324905408488676930, guid: c9339182862506246bf783e61f5dae77, type: 3}
       propertyPath: m_RootOrder
       value: 3

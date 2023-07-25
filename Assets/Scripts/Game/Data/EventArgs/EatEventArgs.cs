@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExtremeSnake.Game.Food
+namespace ExtremeSnake.Game.Levels
 {
     public class EatEventArgs : EventArgs
     {
