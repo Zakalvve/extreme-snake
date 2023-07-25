@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ExtremeSnake.Core;
 using ExtremeSnake.Game.Levels;
 using ExtremeSnake.Game.Snakes;
@@ -24,91 +20,74 @@ namespace ExtremeSnake.Game
         public override void LateUpdate() { }
 
         public override void TransitionTo() {
-            _context._controllers = new List<IController>();
-            _context.GameEmitter.Subscribe("OnLevelStartComplete",HandleLevelLoaded);
-            CreateControllers();
+            Subscriptions.Add(_context.GameEmitter.Subscribe("OnLevelStartComplete",HandleLevelLoaded));
+            if (GameManager.isDevelopment && _context.Settings.ActiveSession == null) {
+                CreateDevEntryPoint();
+            }
+
+            _context.Settings.ActiveSession.PrepareControllers();
         }
 
         public override void Update() { 
             if (HasLoaded) {
-                _context.ChangeState(new GameState(_context));
+                UnsubscribeFromAll();
+                _context.GameEmitter.Emit("OnLoadComplete",this);
+                _context.ChangeState(new IntroState(_context));
             }
         }
 
         public void RegisterPlayerReady(Snake s) {
-            snakes.Add(s);
-            if (snakes.Count == _context.Settings.SnakeControllingEntity.Count) {
+            if (_context.Settings.ActiveSession.Snakes.Count == _context.Settings.ActiveSession.Actors.Count) {
                 _snakesLoaded = true;
             }
         }
 
-        public void CreateControllers() {
-            //initialize controllers
-            ControllerSettings cs;
-            cs = new ControllerSettings();
-
-            if (_context.Settings.SnakeControllingEntity.Count == 0 && GameManager.isDevelopment) {
-                //create default setup for development
-                _context.Settings.SnakeControllingEntity.Add(new ControllingEntitySettings(_context.defaultSkin,"Sid",ParticipantType.PLAYER_1));
-                _context.Settings.SnakeControllingEntity.Add(new ControllingEntitySettings(_context.defaultSkin,"SuckMyBalls23",ParticipantType.COMPUTER));
-                _context.Settings.DifficultySettings.SnakeDifficulty.SnakeSpeed = 5;
-                _context.Settings.DifficultySettings.SnakeDifficulty.SnakeStartingLength = 12;
-            }
-
-            //setup player controller
-            GameManager.Instance.Settings.SnakeControllingEntity.Where(entity => {
-                return entity.EntityType == ParticipantType.PLAYER_1 || entity.EntityType == ParticipantType.PLAYER_2;
-            }).ToList().ForEach(player => {
-                cs.Entities.Add(player);
-            });
-
-            if (cs.Entities.Count == 2) cs.CreateAttachAction<LocalTwoPlayerController>();
-            else cs.CreateAttachAction<PlayerController>();
-
-            _context.Settings.ControllerInfo.Add(cs);
-
-            //setup AI controllers
-            GameManager.Instance.Settings.SnakeControllingEntity.Where(entity => {
-                return entity.EntityType == ParticipantType.COMPUTER;
-            }).ToList().ForEach(computer => {
-                cs = new ControllerSettings();
-                cs.CreateAttachAction<AIController>();
-                cs.Entities.Add(computer);
-                _context.Settings.ControllerInfo.Add(cs);
-            });
+        //this is for when we want to jump into the normal game flow half way along, we must provide some basic load data
+        public void CreateDevEntryPoint() {
+            Difficulty devDifficulty = ScriptableObject.Instantiate(_context.Settings.DefaultDifficulty);
+            devDifficulty.SnakeDifficulty.ShrinkTimerLength = 10000;
+            _context.Settings.ActiveSession = new SessionData(new List<Actor>() { new Actor(_context.Settings.DefaultSkin,"Sid",ParticipantType.PLAYER_1) ,new Actor(_context.Settings.DefaultSkin,"SuckMyBalls23",ParticipantType.COMPUTER) });
+            _context.Settings.ActiveSession.DifficultySettings = devDifficulty;
         }
-        public void HandleLevelLoaded(object sender) {
-            //normally would cycle through game settings to determine number of players/computers create controllers for each one
-            //for now we will create a single player controller
-            _context.Level = (Level)sender;
 
-            foreach (var ctrlSettings in _context.Settings.ControllerInfo) {
-                GameObject controllerGO = GameObject.Instantiate(_context.Settings.BaseEntityControllerPrefab);
+        public void HandleLevelLoaded(object sender) {
+            _context.Settings.ActiveSession.SessionLevel = (Level)sender;
+
+            foreach (var ctrlSettings in _context.Settings.ActiveSession.ControllerData) {
+                GameObject controllerGO = GameObject.Instantiate(_context.Settings.DefaultController);
                 controllerGO.transform.parent = _context.gameObject.transform;
                 IController controller = ctrlSettings.AttachControllerToGameObject(controllerGO);
-                _context._controllers.Add(controller);
-                foreach (var player in ctrlSettings.Entities) {
-                    CreateSnake(controller,_context.Settings.ExtremeSnakePrefab,player);
+                _context.Settings.ActiveSession.Controllers.Add(controller);
+                foreach (var player in ctrlSettings.Pawns) {
+                    player.ActorControls = controller;
+                    CreateSnake(controller,_context.Settings.DefaultSnake,player);
                 }
             }
 
             _levelLoaded = true;
         }
 
-        public void CreateSnake(IController controller,GameObject snakePrefab,ControllingEntitySettings entity) {
+        public void CreateSnake(IController controller,GameObject snakePrefab,Actor entity) {
             EventEmitter emitter = new EventEmitter();
             GameObject snake = _context.Level.GetSnakeSpawner().Spawn(snakePrefab);
             Snake s = snake.GetComponent<Snake>();
+            entity.ActorSnake = s;
+            entity.ActorScore = snake.GetComponent<SnakeScore>();
             s.AssignEmitter(emitter);
             emitter.Subscribe("OnSnakeStartComplete",(object sender) => {
                 ISnakeData data = (ISnakeData)sender;
+                data.Name = entity.Name;
                 SnakeCreatedEventArgs args = new SnakeCreatedEventArgs(data,entity,snake.GetComponent<SnakeScore>());
 
                 //emit events to subscribers that snake creation is complete
                 emitter.Emit("SnakeCreated",this,args);
                 _context.GameEmitter.Emit("SnakeCreated",this,args);
-
                 _context.Level.RegisterSnake(s.ExtractSegmentPositions());
+                _context.Settings.ActiveSession.Snakes.Add(s);
+                _context.Settings.ActiveSession.ActiveSnakes.Add(data.UUID,s);
+                if (GameManager.isDevelopment) {
+                    //data.Invulnerable = true;
+                }
                 RegisterPlayerReady(s);
             });
 

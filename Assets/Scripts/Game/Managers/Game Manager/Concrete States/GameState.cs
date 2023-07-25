@@ -1,6 +1,7 @@
 using Assets.Scripts.Game.Events;
 using ExtremeSnake.Core;
 using ExtremeSnake.Game;
+using ExtremeSnake.Game.Data;
 using ExtremeSnake.Game.Levels;
 using ExtremeSnake.Game.Snakes;
 using System.Collections;
@@ -22,9 +23,9 @@ namespace ExtremeSnake.Game
         private int _secondsRemaining;
 
         public override void TransitionTo() {
-            _secondsRemaining = _context.Settings.Duration;
-            _context.GameEmitter.Subscribe("OnGameOver",HandleGameOver);
-            _context.GameEmitter.Subscribe("OnPause",HandlePause);
+            _secondsRemaining = _context.Settings.ActiveSession.Duration;
+            Subscriptions.Add(_context.GameEmitter.Subscribe<StringEventArgs>("OnSnakeDeath",HandleSnakeDeath));
+            Subscriptions.Add(_context.GameEmitter.Subscribe("OnPause",HandlePause));
         }
 
         public override void Update() { }
@@ -35,7 +36,7 @@ namespace ExtremeSnake.Game
                 _elapsedTimeSinceLastSecond += Time.deltaTime;
 
                 //on each tick
-                if (_elapsedTimeSinceLastTick > _context.Settings.DifficultySettings.SnakeDifficulty.GetTickTimeFromSnakeSpeed()) {
+                if (_elapsedTimeSinceLastTick > _context.Settings.ActiveSession.DifficultySettings.SnakeDifficulty.GetTickTimeFromSnakeSpeed()) {
                     _context.GameEmitter.Emit("OnTick",this);
                     _elapsedTimeSinceLastTick = 0f;
                 }
@@ -46,7 +47,7 @@ namespace ExtremeSnake.Game
                     _elapsedTimeSinceLastSecond = 0f;
                     _secondsRemaining--;
                     if (_secondsRemaining <= 0) {
-                        _context.GameEmitter.Emit("OnGameOver",this);
+                        GameOver();
                     }
                 }
             }
@@ -54,10 +55,16 @@ namespace ExtremeSnake.Game
 
         public override void LateUpdate() { }
 
-        public void HandleGameOver(object sender) {
-            _context.GameEmitter.UnsubscribeFromAll();
-            SceneManager.LoadScene(0);
-            _context.ChangeState(new MenuState(_context));
+        public void HandleSnakeDeath(object sender, StringEventArgs args) {
+            _context.Settings.ActiveSession.ActiveSnakes.Remove(args.Text);
+            if (_context.Settings.ActiveSession.ActiveSnakes.Count <= 1) {
+                GameOver();
+            }
+        }
+
+        public void GameOver() {
+            UnsubscribeFromAll();
+            _context.ChangeState(new PostGameState(_context));
         }
 
         public void HandlePause(object sender) {
