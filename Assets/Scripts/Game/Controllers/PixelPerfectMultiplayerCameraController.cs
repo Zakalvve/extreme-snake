@@ -5,16 +5,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
 
+[RequireComponent(typeof(PixelPerfectWithZoom))]
 public class PixelPerfectMultiplayerCameraController : MultiFocusCameraController
 {
-    private PixelPerfectCamera pixelPerfectCamera;
-    public int defaultPPU;
+    public float DefaultZoom;
     private PixelPerfectWithZoom zoomControls;
     [Range(0f, 1f)]
     public float scaleFactor;
 
     protected override void Start() {
-        pixelPerfectCamera = GetComponent<PixelPerfectCamera>();
         zoomControls = GetComponent<PixelPerfectWithZoom>();
         base.Start();
     }
@@ -40,6 +39,8 @@ public class PixelPerfectMultiplayerCameraController : MultiFocusCameraControlle
 
             // Set the calculated assetsPPU to achieve the desired zoom level
             zoomControls.SetZoom(Mathf.Clamp(ppu, minOrthographicSize, maxOrthographicSize));
+        } else {
+            zoomControls.SetZoom(DefaultZoom);
         }
     }
 }
