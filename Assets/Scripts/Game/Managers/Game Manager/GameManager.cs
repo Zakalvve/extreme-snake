@@ -9,12 +9,11 @@ namespace ExtremeSnake.Game
     {
         //for development and starting from various non default entry points
         public StartingState startingState;
-        public static bool isDevelopment = true;
+        public bool isDevelopment = true;
         private IMonobehaviourState _state;
         public EventEmitter GameEmitter { get; private set; }
         public GameSettings Settings;
-        private AudioController AudioControls;
-        public MultiplierGradients GlobalGradients;
+        public AudioController AudioControls;
         public Level Level { get { return Settings.ActiveSession.SessionLevel; } }
 
         protected override void Awake() {
