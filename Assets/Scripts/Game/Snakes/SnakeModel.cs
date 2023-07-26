@@ -100,7 +100,7 @@ namespace ExtremeSnake.Game.Snakes
 
         private bool Shrink(int amount, bool releaseSegment = false) {
             for (int i = 0; i < amount; i++) {
-                if (_data.Segments.Count == 2) {
+                if (_data.Segments.Count == 2 && _growth == 0) {
                     _data.IsAlive = false;
                     GameManager.Instance.GameEmitter.Emit("OnSnakeDeath",this, new StringEventArgs(_data.UUID));
                     return false;
