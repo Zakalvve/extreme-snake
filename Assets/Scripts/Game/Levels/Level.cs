@@ -39,7 +39,7 @@ namespace ExtremeSnake.Game.Levels
             GameManager.Instance.GameEmitter.Subscribe<SnakeMoveEventArgs>("OnSnakePositionsChanged",UpdateWalkables);
             GameManager.Instance.GameEmitter.Emit("OnLevelStartComplete",this);
             GameManager.Instance.GameEmitter.Subscribe("OnLoadComplete",(object sender) => {
-                for (int i = 0; i < 0; i++) {
+                for (int i = 0; i < 5; i++) {
                     try {
                         (string layer, Vector2Int cell) = GetRandomWalkableCell();
                         _foodSpawner.Spawn(layer,cell);

@@ -18,7 +18,7 @@ namespace ExtremeSnake.Game
 
 
         public override void TransitionTo() {
-            if (!GameManager.isDevelopment) {
+            if (!GameManager.Instance.isDevelopment) {
                 cineControls = _context.GetComponent<CinematicController>();
                 cineControls.PlayIntro(CinematicComplete);
             }

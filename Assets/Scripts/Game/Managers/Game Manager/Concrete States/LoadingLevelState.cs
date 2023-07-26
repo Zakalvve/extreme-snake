@@ -21,7 +21,7 @@ namespace ExtremeSnake.Game
 
         public override void TransitionTo() {
             Subscriptions.Add(_context.GameEmitter.Subscribe("OnLevelStartComplete",HandleLevelLoaded));
-            if (GameManager.isDevelopment && _context.Settings.ActiveSession == null) {
+            if (GameManager.Instance.isDevelopment && _context.Settings.ActiveSession == null) {
                 CreateDevEntryPoint();
             }
 
@@ -45,7 +45,7 @@ namespace ExtremeSnake.Game
         //this is for when we want to jump into the normal game flow half way along, we must provide some basic load data
         public void CreateDevEntryPoint() {
             Difficulty devDifficulty = ScriptableObject.Instantiate(_context.Settings.DefaultDifficulty);
-            devDifficulty.SnakeDifficulty.ShrinkTimerLength = 10000;
+            //devDifficulty.SnakeDifficulty.ShrinkTimerLength = 10000;
             _context.Settings.ActiveSession = new SessionData(new List<Actor>() { new Actor(_context.Settings.DefaultSkin,"Sid",ParticipantType.PLAYER_1) ,new Actor(_context.Settings.DefaultSkin,"SuckMyBalls23",ParticipantType.COMPUTER) });
             _context.Settings.ActiveSession.DifficultySettings = devDifficulty;
         }
@@ -85,7 +85,7 @@ namespace ExtremeSnake.Game
                 _context.Level.RegisterSnake(s.ExtractSegmentPositions());
                 _context.Settings.ActiveSession.Snakes.Add(s);
                 _context.Settings.ActiveSession.ActiveSnakes.Add(data.UUID,s);
-                if (GameManager.isDevelopment) {
+                if (GameManager.Instance.isDevelopment) {
                     //data.Invulnerable = true;
                 }
                 RegisterPlayerReady(s);

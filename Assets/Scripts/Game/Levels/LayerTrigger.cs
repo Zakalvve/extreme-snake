@@ -9,7 +9,7 @@ namespace ExtremeSnake.Game
         public string layer;
         public string sortingLayer;
 
-        private void OnTriggerExit2D(Collider2D other) {
+        private void OnTriggerEnter2D(Collider2D other) {
             other.gameObject.layer = LayerMask.NameToLayer(layer);
 
             other.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = sortingLayer;
