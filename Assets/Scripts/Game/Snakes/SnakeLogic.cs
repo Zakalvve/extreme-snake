@@ -34,6 +34,7 @@ namespace ExtremeSnake.Game.Snakes
                 _data.LockMovement = false;
             }
             else {
+                GameManager.Instance.AudioControls.PlaySFX("fail");
                 if (!_model.ChangeLength(-1)) {
                     return false;
                 }
@@ -67,6 +68,7 @@ namespace ExtremeSnake.Game.Snakes
         }
 
         public void HandleEat(object sender,EatEventArgs args) {
+            GameManager.Instance.AudioControls.PlaySFX("eat");
             _model.AddGrowth(args.FoodEaten.GrowthValue);
             _model.Draw();
             _data.Fullness += difficulty.ShrinkTimerLength * args.FoodEaten.GrowthValue;

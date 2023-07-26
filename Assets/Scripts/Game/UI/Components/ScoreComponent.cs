@@ -22,7 +22,7 @@ namespace ExtremeSnake.Game.UI
             if (args.Score.Multiplier < 2) Multiplier.enabled = false;
             else {
                 Multiplier.enabled = true;
-                Multiplier.colorGradientPreset = GameManager.Instance.GlobalGradients.GetGradient(args.Score.Multiplier);
+                Multiplier.colorGradientPreset = GameManager.Instance.Settings.DefaultMultiplierGradients.GetGradient(args.Score.Multiplier);
                 Multiplier.text = $"x{args.Score.Multiplier}";
             }
 
