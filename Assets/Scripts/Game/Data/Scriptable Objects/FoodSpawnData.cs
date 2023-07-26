@@ -7,6 +7,7 @@ namespace ExtremeSnake.Game.Levels
     [CreateAssetMenu(menuName = "My Assets/Food Spawn Data")]
     public class FoodSpawnData : ScriptableObject
     {
+        public string Name;
         public GameObject FoodPrefab;
         public float SpawnChance;
     }

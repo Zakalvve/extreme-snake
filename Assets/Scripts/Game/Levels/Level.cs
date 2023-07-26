@@ -42,7 +42,7 @@ namespace ExtremeSnake.Game.Levels
                 for (int i = 0; i < 5; i++) {
                     try {
                         (string layer, Vector2Int cell) = GetRandomWalkableCell();
-                        _foodSpawner.Spawn(layer,cell);
+                        _foodSpawner.Spawn(layer,CenterInCell(cell));
                         _layers[LayerMask.NameToLayer(layer)].RegisterPositionNotWalkable((Vector3Int)cell);
                     } catch (Exception e) {
                         Debug.LogWarning($"Caught and recovered from error. {e}");
@@ -87,7 +87,7 @@ namespace ExtremeSnake.Game.Levels
                 ) {
                     try {
                         (string layer, Vector2Int cell) = GetRandomWalkableCell();
-                        _foodSpawner.Spawn(layer,cell);
+                        _foodSpawner.Spawn(layer,CenterInCell(cell));
                         _layers[LayerMask.NameToLayer(layer)].RegisterPositionNotWalkable((Vector3Int)cell);
                     } catch (Exception e) {
                         Debug.LogWarning($"Caught and recovered from error. {e}");

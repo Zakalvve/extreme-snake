@@ -15,7 +15,7 @@ namespace ExtremeSnake.Game.Snakes
                 Food food = collision.gameObject.GetComponent<Food>();
                 value = collision.gameObject.GetComponent<Food>().GrowthValue;
                 if (value > 0) {
-                    GameObject.Destroy(collision.gameObject);
+                    food.Eaten();
                     _snake.SnakeEmitter.Emit("OnEat",this,new EatEventArgs(food));
                 }
             }

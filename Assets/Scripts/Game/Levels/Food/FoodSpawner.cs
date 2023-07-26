@@ -1,17 +1,20 @@
+using Assets.Scripts.Core.Instance_Control_Patterns;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace ExtremeSnake.Game.Levels
 {
-    public class FoodSpawner : MonoBehaviour
+    public class FoodSpawner
     {
         [SerializeField]
         private LevelFood _levelFood;
+        private Dictionary<string,InstancePooler<GameObject>> FoodPool = new Dictionary<string, InstancePooler<GameObject>>();
 
         public FoodSpawner(LevelFood levelFood) {
             _levelFood = levelFood;
         }
-        public void Spawn(string layer, Vector2 at) {
+        public void Spawn(string layer, Vector3 at) {
             FoodSpawnData spawn;
             try {
                 spawn = ChooseRandomFood();
@@ -19,10 +22,17 @@ namespace ExtremeSnake.Game.Levels
                 Debug.LogError(e);
                 spawn = _levelFood.LevelFoods.FirstOrDefault();
             }
-            GameObject foodGO = Instantiate(spawn.FoodPrefab);
+
+            if (!FoodPool.ContainsKey(spawn.name)) {
+                FoodPool.Add(spawn.name, new InstancePooler<GameObject>(() => GameObject.Instantiate(spawn.FoodPrefab)));
+            }
+
+            GameObject foodGO = FoodPool[spawn.name].Get();
+            foodGO.SetActive(true);
             foodGO.transform.position = at;
             foodGO.layer = LayerMask.NameToLayer(layer);
             foodGO.GetComponent<SpriteRenderer>().sortingLayerName = layer;
+            foodGO.GetComponent<Food>().OnEaten = (GameObject go) => FoodPool[spawn.name].Return(go);
         }
 
         private FoodSpawnData ChooseRandomFood() {

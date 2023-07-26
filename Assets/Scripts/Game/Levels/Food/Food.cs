@@ -1,5 +1,6 @@
 using UnityEngine;
 using Assets.Scripts.Core;
+using System;
 
 namespace ExtremeSnake.Game.Levels
 {
@@ -7,18 +8,14 @@ namespace ExtremeSnake.Game.Levels
     {
         public int GrowthValue;
         public int PointsValue;
+        public Action<GameObject> OnEaten;
 
         protected override void Awake() {
             base.Awake();
         }
-        void Start() {
-            if (GameManager.Instance.Level == null) {
-                GameManager.Instance.GameEmitter.Subscribe("OnLevelStartComplete",(object sender) => {
-                    transform.position = GameManager.Instance.Level.CenterInCell(Vector3Int.FloorToInt(transform.position));
-                });
-            } else {
-                transform.position = GameManager.Instance.Level.CenterInCell(Vector3Int.FloorToInt(transform.position));
-            }
+        public void Eaten() {
+            gameObject.SetActive(false);
+            OnEaten?.Invoke(gameObject);
         }
     }
 }

@@ -15,11 +15,7 @@ namespace Assets.Scripts.Core.Instance_Control_Patterns
             _instanceGenerator = instanceGnerator;
             _instancePool = new ConcurrentBag<T>();
         }
-        public T Get() {
-            _instancePool.TryTake(out T item);
-            if (item != null) return item;
-            return _instanceGenerator(); 
-        }
+        public T Get() => _instancePool.TryTake(out T item) ? item : _instanceGenerator();
         public void Return(T item) => _instancePool.Add(item);
     }
 }
