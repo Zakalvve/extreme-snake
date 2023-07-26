@@ -9,6 +9,7 @@ using Assets.Scripts.Game.Events;
 using ExtremeSnake.Game.Snakes;
 using System;
 using ExtremeSnake.Game.UI;
+using ExtremeSnake.Utils;
 
 public class PlaySetupMenu : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class PlaySetupMenu : MonoBehaviour
 
     public GameObject onePlayerToggle;
     public GameObject twoPlayerToggle;
+    public List<string> SnakeNames = new List<string>();
 
 
     //initialization
@@ -65,20 +67,31 @@ public class PlaySetupMenu : MonoBehaviour
             }
         }
 
-        _playerComponents.Push(CreateMenuPlayerComponent(ParticipantType.PLAYER_1));
-        if (isTwoPlayer) _playerComponents.Push(CreateMenuPlayerComponent(ParticipantType.PLAYER_2));
-        _playerComponents.Push(CreateMenuPlayerComponent());
-        addSyncRequired = false;
+        if (GameManager.Instance.Settings.Player1 == null) {
+            _playerComponents.Push(CreateMenuPlayerComponent(ParticipantType.PLAYER_1));
+        } else {
+            _playerComponents.Push(CreateMenuPlayerComponent(GameManager.Instance.Settings.Player1));
+        }
+
+        if (GameManager.Instance.Settings.Player2 != null) {
+            toggleTwoPlayer();
+            addSyncRequired = true;
+        } else {
+            _playerComponents.Push(CreateMenuPlayerComponent());
+        }
+        
+        //if (isTwoPlayer) _playerComponents.Push(CreateMenuPlayerComponent(ParticipantType.PLAYER_2));
+        //addSyncRequired = false;
     }
 
     //gather data and start game
     public void OnPlayGame() {
-        //int chosenDuration = 0;
         List<Actor> chosenActors = _playerComponents
             .Select(component => component.GetComponent<MenuPlayerComponent>())
             .Where(component => component.IsPlayerActive)
             .Select(component => component.GetOutput())
             .ToList();
+
         Difficulty chosenDifficulty = DifficultyOptions.Where(item => item.Name == SelectedDifficultyName).First();
 
         //Session generatedSession = new Session(chosenDuration, chosenActors,chosenDifficulty);
@@ -151,10 +164,18 @@ public class PlaySetupMenu : MonoBehaviour
         }
     }
 
+    public GameObject CreateMenuPlayerComponent(Actor actor) {
+        GameObject go = GameObject.Instantiate(MenuPlayerComponentPrefab,PlayerSetupPanel.transform);
+        go.transform.localPosition += Vector3.down * _playerComponents.Count * (go.GetComponent<RectTransform>().rect.height + PlayerComponentSpacing);
+        go.GetComponent<MenuPlayerComponent>().Initialize(actor);
+        go.transform.SetAsLastSibling();
+        return go;
+    }
+
     public GameObject CreateMenuPlayerComponent(ParticipantType type = ParticipantType.COMPUTER) {
         GameObject go = GameObject.Instantiate(MenuPlayerComponentPrefab,PlayerSetupPanel.transform);
         go.transform.localPosition += Vector3.down * _playerComponents.Count * (go.GetComponent<RectTransform>().rect.height + PlayerComponentSpacing);
-        go.GetComponent<MenuPlayerComponent>().Initialize(type);
+        go.GetComponent<MenuPlayerComponent>().Initialize(type,UtilsClass.RandomElement<string>(SnakeNames));
         go.transform.SetAsLastSibling();
         return go;
     }
@@ -165,6 +186,18 @@ public class PlaySetupMenu : MonoBehaviour
 
         if (_playerComponents.Count < Levels[SelectedLevelIndex].MaxPlayers) {
             _playerComponents.Push(CreateMenuPlayerComponent(args.playerType));
+        }
+        else {
+            addSyncRequired = true;
+        }
+    }
+
+    public void HandleAddPlayer(Actor actor) {
+        //toggle visibility of current panel
+        _playerComponents.Peek().GetComponent<MenuPlayerComponent>().EnableDisplay();
+
+        if (_playerComponents.Count < Levels[SelectedLevelIndex].MaxPlayers) {
+            _playerComponents.Push(CreateMenuPlayerComponent(actor));
         }
         else {
             addSyncRequired = true;
@@ -197,7 +230,7 @@ public class PlaySetupMenu : MonoBehaviour
     public void toggleTwoPlayer() {
 
         //need to add the supports two player bool to levels for this to work
-        //if (!isTwoPlayer && Levels[SelectedLevelIndex].SupportsTwoPlayer) return;
+        //if (!isTwoPlayer && !Levels[SelectedLevelIndex].SupportsTwoPlayer) return;
 
         isTwoPlayer = !isTwoPlayer;
 
@@ -214,7 +247,11 @@ public class PlaySetupMenu : MonoBehaviour
             }
 
             //add a new player
-            GameManager.Instance.GameEmitter.Emit("OnPlayerComponentAdded",this,new AddPlayerEventArgs(ParticipantType.PLAYER_2));
+            if (GameManager.Instance.Settings.Player2 == null) {
+                GameManager.Instance.GameEmitter.Emit("OnPlayerComponentAdded",this,new AddPlayerEventArgs(ParticipantType.PLAYER_2));
+            } else {
+                HandleAddPlayer(GameManager.Instance.Settings.Player2);
+            }
 
             while (store.Count > 0) {
                 _playerComponents.Push(store.Pop());

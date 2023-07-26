@@ -47,10 +47,15 @@ public class MenuPlayerComponent : MonoBehaviour
 
     public bool IsTwoPlayer { get { return PlayerType == ParticipantType.PLAYER_2 ? true : false; } }
 
-    public void Initialize(ParticipantType type = ParticipantType.COMPUTER) {
+    public void Initialize(Actor actor) {
+        Initialize(actor.ActorType,actor.Name);
+        UpdateSnakeAppearance(actor.Skin);
+    }
+
+    public void Initialize(ParticipantType type = ParticipantType.COMPUTER, string startingName = "") {
         PlayerType = type;
         IsPlayer = type != ParticipantType.COMPUTER;
-
+        NameTextBox.text = startingName;
         AddPlayerButton.SetActive(!IsPlayer);
         Controls.SetActive(IsPlayer);
         IsPlayerActive = IsPlayer;
@@ -77,7 +82,13 @@ public class MenuPlayerComponent : MonoBehaviour
     }
 
     public Actor GetOutput() {
-        return new Actor(SkinOptions[SelectedSkin],Name,PlayerType);
+        Actor output = new Actor(SkinOptions[SelectedSkin],Name,PlayerType);
+        if (PlayerType == ParticipantType.PLAYER_1) {
+            GameManager.Instance.Settings.Player1 = output;
+        } else if (PlayerType == ParticipantType.PLAYER_2) {
+            GameManager.Instance.Settings.Player2 = output;
+        }
+        return output;
     }
 
     public void OnNextSkin() {
@@ -92,6 +103,11 @@ public class MenuPlayerComponent : MonoBehaviour
         UpdateSnakeAppearance();
     }
 
+    public void UpdateSnakeAppearance(SnakeSprites skin) {
+        Head.sprite = skin.HeadRight;
+        Body.sprite = skin.Horizontal;
+        Tail.sprite = skin.TailLeft;
+    }
     public void UpdateSnakeAppearance() {
         Head.sprite = SkinOptions[SelectedSkin].HeadRight;
         Body.sprite = SkinOptions[SelectedSkin].Horizontal;
