@@ -7,15 +7,23 @@ using UnityEngine.UI;
 
 public class GameSettingsMenu : MonoBehaviour
 {
+    //volume levels
+    public Slider _masterVolumeSlider;
+    public Slider _musicVolumeSlider;
+    public Slider _sfxVolumeSlider;
+
+    //mutes
+    public GameObject MasterToggleOn;
+    public GameObject MasterToggleOff;
     public GameObject MusicToggleOn;
     public GameObject MusicToggleOff;
     public GameObject SoundFXToggleOn;
     public GameObject SoundFXToggleOff;
-    private Slider _volumeSlider;
+
     public bool ShouldDebug;
 
     private void Awake() {
-        _volumeSlider = GetComponentInChildren<Slider>();
+        OnActive();
         if (ShouldDebug) {
             GameManager.Instance.GameEmitter.Subscribe("OnVolumeChanged",DebugSettingsValues);
             GameManager.Instance.GameEmitter.Subscribe("OnPlayMusicChanged",DebugSettingsValues);
@@ -24,33 +32,56 @@ public class GameSettingsMenu : MonoBehaviour
     }
 
     public void OnActive() {
-        _volumeSlider.value = GameManager.Instance.Settings.AudioSettings.Volume;
-        
-        bool musicToggle = GameManager.Instance.Settings.AudioSettings.PlayMusic;
-        bool sfxToggle = GameManager.Instance.Settings.AudioSettings.PlaySoundFX;
+        //volume levels
+        _masterVolumeSlider.value = GameManager.Instance.Settings.AudioSettings.MasterVolume;
+        _musicVolumeSlider.value = GameManager.Instance.Settings.AudioSettings.MusicVolume;
+        _sfxVolumeSlider.value = GameManager.Instance.Settings.AudioSettings.SFXVolume;
 
-        MusicToggleOn.SetActive(musicToggle);
-        MusicToggleOff.SetActive(!musicToggle);
 
-        SoundFXToggleOn.SetActive(sfxToggle);
-        SoundFXToggleOff.SetActive(!sfxToggle);
+        //mutes
+        bool masterToggle = GameManager.Instance.Settings.AudioSettings.MasterMute;
+        bool musicToggle = GameManager.Instance.Settings.AudioSettings.MusicMute;
+        bool sfxToggle = GameManager.Instance.Settings.AudioSettings.SFXMute;
+
+        MasterToggleOn.SetActive(!masterToggle);
+        MasterToggleOff.SetActive(masterToggle);
+
+        MusicToggleOn.SetActive(!musicToggle);
+        MusicToggleOff.SetActive(musicToggle);
+
+        SoundFXToggleOn.SetActive(!sfxToggle);
+        SoundFXToggleOff.SetActive(sfxToggle);
     }
 
-    public void OnVolumeSliderChanged() {
-        GameManager.Instance.Settings.AudioSettings.Volume = (int)_volumeSlider.value;
+    //volume levels
+    public void OnMasterVolumeSliderChanged() {
+        GameManager.Instance.Settings.AudioSettings.MasterVolume = (int)_masterVolumeSlider.value;
     }
 
-    public void TogglePlaySFX() {
-        GameManager.Instance.Settings.AudioSettings.PlaySoundFX = !GameManager.Instance.Settings.AudioSettings.PlaySoundFX;
+    public void OnMusicVolumeSliderChanged() {
+        GameManager.Instance.Settings.AudioSettings.MusicVolume = (int)_musicVolumeSlider.value;
     }
 
-    public void TogglePlayMusic() {
-        GameManager.Instance.Settings.AudioSettings.PlayMusic = !GameManager.Instance.Settings.AudioSettings.PlayMusic;
+    public void OnSfxVolumeSliderChanged() {
+        GameManager.Instance.Settings.AudioSettings.SFXVolume = (int)_sfxVolumeSlider.value;
     }
+
+    //mutes
+    public void OnToggleMasterMute() {
+        GameManager.Instance.Settings.AudioSettings.MasterMute = !GameManager.Instance.Settings.AudioSettings.MasterMute;
+    }
+    public void OnToggleMusicMute() {
+        GameManager.Instance.Settings.AudioSettings.MusicMute = !GameManager.Instance.Settings.AudioSettings.MusicMute;
+    }
+
+    public void OnToggleSfxMute() {
+        GameManager.Instance.Settings.AudioSettings.SFXMute = !GameManager.Instance.Settings.AudioSettings.SFXMute;
+    }
+
 
     public void DebugSettingsValues(object sender) {
-        Debug.Log($"Volume Level: {GameManager.Instance.Settings.AudioSettings.Volume}");
-        Debug.Log($"Play Music: {(GameManager.Instance.Settings.AudioSettings.PlayMusic ? "Yes" : "No")}");
-        Debug.Log($"Play Sound FX: {(GameManager.Instance.Settings.AudioSettings.PlaySoundFX ? "Yes" : "No")}");
+        Debug.Log($"Volume Level: {GameManager.Instance.Settings.AudioSettings.MasterVolume}");
+        Debug.Log($"Play Music: {(GameManager.Instance.Settings.AudioSettings.MusicMute ? "Yes" : "No")}");
+        Debug.Log($"Play Sound FX: {(GameManager.Instance.Settings.AudioSettings.SFXMute ? "Yes" : "No")}");
     }
 }
