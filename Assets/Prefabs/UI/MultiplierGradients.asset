@@ -19,3 +19,10 @@ MonoBehaviour:
   Sixteen: {fileID: 11400000, guid: b8268f1647236ad438f931bcbd48fe45, type: 2}
   ThirtyTwo: {fileID: 11400000, guid: 36028de295d4f7442a44012136fd0695, type: 2}
   SixtyFour: {fileID: 11400000, guid: 23959c56614f46d4aa0e0c0614566003, type: 2}
+  DefaultColor: {r: 1, g: 1, b: 1, a: 0}
+  TwoColor: {r: 1, g: 0.85263157, b: 0, a: 1}
+  FourColor: {r: 0.2926829, g: 1, b: 0, a: 1}
+  EightColor: {r: 0.004807472, g: 0, b: 1, a: 1}
+  SixteenColor: {r: 0.5661378, g: 0, b: 1, a: 1}
+  ThirtyTwoColor: {r: 1, g: 0, b: 0.09262037, a: 1}
+  SixtyFourColor: {r: 1, g: 0.48381877, b: 0, a: 1}

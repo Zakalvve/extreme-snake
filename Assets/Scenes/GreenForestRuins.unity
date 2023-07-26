@@ -135,6 +135,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 355226721, guid: 05a79c659082cd04286c1be8e9e5976b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 568761259, guid: 05a79c659082cd04286c1be8e9e5976b, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -727,25 +731,45 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114663357, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._keys.Array.size
+      value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 114663359, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: m_Enabled
-      value: 0
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._values.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._keys.Array.data[5]
+      value: mult-up
+      objectReference: {fileID: 0}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._keys.Array.data[6]
+      value: mult-down
+      objectReference: {fileID: 0}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._keyValues.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._values.Array.data[5]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4eb3566dde7e1484d8592cb6456616f3, type: 3}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._values.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: aa40f90f870e93f4cabf1c9b88d1aa7c, type: 3}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._keyValues.Array.data[5]
+      value: mult-up
+      objectReference: {fileID: 0}
+    - target: {fileID: 114663360, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Clips._keyValues.Array.data[6]
+      value: mult-down
       objectReference: {fileID: 0}
     - target: {fileID: 1324905408488676928, guid: c9339182862506246bf783e61f5dae77, type: 3}
       propertyPath: m_Name
       value: GameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 1324905408488676928, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1324905408488676929, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: startingState
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1324905408488676930, guid: c9339182862506246bf783e61f5dae77, type: 3}
       propertyPath: m_RootOrder
@@ -792,12 +816,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8674340033055302967, guid: c9339182862506246bf783e61f5dae77, type: 3}
-      propertyPath: defaultSkin
-      value: 
-      objectReference: {fileID: 11400000, guid: 9835fe3d9ef7b9241927e4fd2f7100b3, type: 2}
+      propertyPath: isDevelopment
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8674340033055302967, guid: c9339182862506246bf783e61f5dae77, type: 3}
       propertyPath: startingState
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8674340033055302967, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Settings.AudioSettings._sfxVolume
+      value: 51
+      objectReference: {fileID: 0}
+    - target: {fileID: 8674340033055302967, guid: c9339182862506246bf783e61f5dae77, type: 3}
+      propertyPath: Settings.AudioSettings._masterVolume
+      value: 28
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9339182862506246bf783e61f5dae77, type: 3}
@@ -1597,7 +1629,7 @@ MonoBehaviour:
   maxOrthographicSize: 2
   zoomSpeed: 5
   followSpeed: 5
-  defaultPPU: 3
+  DefaultZoom: 3
   scaleFactor: 0
 --- !u!114 &3506463165026118450
 MonoBehaviour:
