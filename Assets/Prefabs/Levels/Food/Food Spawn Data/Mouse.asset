@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ed603cd666de64286c26d1b4895a56, type: 3}
   m_Name: Mouse
   m_EditorClassIdentifier: 
+  Name: mouse
   FoodPrefab: {fileID: 5429078367135210908, guid: e6b2479b1f0dfd0409c3cc0321e85c0a, type: 3}
   SpawnChance: 0.5

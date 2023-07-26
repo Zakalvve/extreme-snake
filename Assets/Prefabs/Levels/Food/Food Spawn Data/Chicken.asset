@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ed603cd666de64286c26d1b4895a56, type: 3}
   m_Name: Chicken
   m_EditorClassIdentifier: 
+  Name: chicken
   FoodPrefab: {fileID: 5429078367135210908, guid: 00851210457bd954abe16445d1d5effd, type: 3}
   SpawnChance: 0.21

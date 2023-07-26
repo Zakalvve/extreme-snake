@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ed603cd666de64286c26d1b4895a56, type: 3}
   m_Name: Penguin
   m_EditorClassIdentifier: 
+  Name: penguin
   FoodPrefab: {fileID: 5429078367135210908, guid: e22cadc1a51d33a4eb7cdf1dd36fa084, type: 3}
   SpawnChance: 0.02

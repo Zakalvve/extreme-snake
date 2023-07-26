@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ed603cd666de64286c26d1b4895a56, type: 3}
   m_Name: Rat
   m_EditorClassIdentifier: 
+  Name: rat
   FoodPrefab: {fileID: 5429078367135210908, guid: bcc55286f355bc4489fe1df64037dfa7, type: 3}
   SpawnChance: 0.27
