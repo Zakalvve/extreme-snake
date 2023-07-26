@@ -50,24 +50,34 @@ public class PlayerController : MonoBehaviour, IController
         _enter = PlayerInput.actions["Enter"];
         _escape = PlayerInput.actions["Escape"];
 
-        _up.performed += context => MoveUp(context, (int)Player.PLAYER_1);
-        _down.performed += context => MoveDown(context, (int)Player.PLAYER_1);
-        _left.performed += context => MoveLeft(context, (int)Player.PLAYER_1);
-        _right.performed += context => MoveRight(context ,(int)Player.PLAYER_1);
 
         _pause.performed += PauseGame;
         _enter.performed += Enter;
         _escape.performed += Escape;
     }
+    protected virtual void Update() {
+        if (_up.triggered) {
+            MoveUp((int)Player.PLAYER_1);
+        }
+        if (_down.triggered) {
+            MoveDown((int)Player.PLAYER_1);
+        }
+        if (_left.triggered) {
+            MoveLeft((int)Player.PLAYER_1);
+        }
+        if (_right.triggered) {
+            MoveRight((int)Player.PLAYER_1);
+        }
+    }
 
-    protected void MoveUp(InputAction.CallbackContext context, int playerIndex) {
+    protected void MoveUp(int playerIndex) {
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
         }
         _emitters[playerIndex].Emit("OnChangeDirection",this,new ControllerEventArgs(Vector2.up));
     }
-    protected void MoveDown(InputAction.CallbackContext context,int playerIndex) {
+    protected void MoveDown(int playerIndex) {
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
@@ -75,14 +85,14 @@ public class PlayerController : MonoBehaviour, IController
         _emitters[playerIndex].Emit("OnChangeDirection",this,new ControllerEventArgs(Vector2.down));
     }
 
-    protected void MoveLeft(InputAction.CallbackContext context,int playerIndex) {
+    protected void MoveLeft(int playerIndex) {
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
         }
         _emitters[playerIndex].Emit("OnChangeDirection",this,new ControllerEventArgs(Vector2.left));
     }
-    protected void MoveRight(InputAction.CallbackContext context,int playerIndex) {
+    protected void MoveRight(int playerIndex) {
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");

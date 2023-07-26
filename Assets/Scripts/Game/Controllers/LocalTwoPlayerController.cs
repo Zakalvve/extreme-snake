@@ -1,4 +1,5 @@
 using ExtremeSnake.Core;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 //the default controller for local multiplayer
@@ -28,10 +29,21 @@ public class LocalTwoPlayerController : PlayerController
         _P2down = PlayerInput.actions["P2 Down"];
         _P2left = PlayerInput.actions["P2 Left"];
         _P2right = PlayerInput.actions["P2 Right"];
-
-        _P2up.performed += context => MoveUp(context,(int)Player.PLAYER_2);
-        _P2down.performed += context => MoveDown(context,(int)Player.PLAYER_2);
-        _P2left.performed += context => MoveLeft(context,(int)Player.PLAYER_2);
-        _P2right.performed += context => MoveRight(context,(int)Player.PLAYER_2);
     }
+    protected override void Update() {
+        base.Update();
+        if (_P2up.triggered) {
+            MoveUp((int)Player.PLAYER_2);
+        }
+        if (_P2down.triggered) {
+            MoveDown((int)Player.PLAYER_2);
+        }
+        if (_P2left.triggered) {
+            MoveLeft((int)Player.PLAYER_2);
+        }
+        if (_P2right.triggered) {
+            MoveRight((int)Player.PLAYER_2);
+        }
+    }
+
 }
