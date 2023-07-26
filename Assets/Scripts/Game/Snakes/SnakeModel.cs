@@ -1,7 +1,10 @@
 ﻿using Assets.Scripts.Game.Events;
 using ExtremeSnake.Game.Data;
-using System.Security.Claims;
+using ExtremeSnake.Core;
 using UnityEngine;
+using Assets.Scripts.Core.Instance_Control_Patterns;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ExtremeSnake.Game.Snakes
 {
@@ -13,13 +16,19 @@ namespace ExtremeSnake.Game.Snakes
 
         private ISnakeData _data;
         private bool canDraw = false;
+        private Vector2Int lastPosition;
+        private InstancePooler<SnakeSegment> SegmentPool;
 
         public SnakeModel(ISnakeData data,Vector2Int spawnPosition, int layer) {
             _data = data;
 
+            SegmentPool = new InstancePooler<SnakeSegment>(() => {
+                return CreateEmptySegment(_data.ViewData.BodyPrefab);
+            });
+
             //create segments
-            _data.Segments.AddFirst(CreateSegment(_data.ViewData.HeadPrefab,spawnPosition, layer));
-            _data.Segments.AddLast(CreateSegment(_data.ViewData.BodyPrefab,spawnPosition + Vector2Int.RoundToInt(_data.MoveDirection * -1), layer));
+            _data.Segments.AddFirst(CreateSegment(CreateEmptySegment(_data.ViewData.HeadPrefab),spawnPosition, layer));
+            _data.Segments.AddLast(CreateSegment(SegmentPool.Get(),spawnPosition + Vector2Int.RoundToInt(_data.MoveDirection * -1), layer));
             _growth = _data.StartingLength - 2;
             _data.SnakeEmitter.Subscribe<SnakeCreatedEventArgs>("SnakeCreated",HandleReskin);
         }
@@ -52,6 +61,7 @@ namespace ExtremeSnake.Game.Snakes
 
         public void Move() {
             LevelPosition released = new LevelPosition(_data.Segments.Last.Value.ModelPosition,_data.Segments.Last.Value.Segment.layer);
+            lastPosition = _data.Segments.Last.Value.ModelPosition;
             for (var segment = _data.Segments.Last; segment != null; segment = segment.Previous) {
                 if (segment.Previous == null) {
                     segment.Value.ModelPosition += Vector2Int.RoundToInt(Vector2Int.RoundToInt(_data.MoveDirection));
@@ -105,30 +115,53 @@ namespace ExtremeSnake.Game.Snakes
         }
 
         private void Grow(int amount) {
-            Vector2Int directionOfGrowth = _data.Segments.Last.Value.ModelPosition - _data.Segments.Last.Previous.Value.ModelPosition;
             for (int i = 0; i < amount; i++) {
-                _data.Segments.AddLast(CreateSegment(_data.ViewData.BodyPrefab,_data.Segments.Last.Value.ModelPosition + directionOfGrowth,_data.Segments.Last.Value.Layer));
+                _data.Segments.AddLast(CreateSegment(SegmentPool.Get(),lastPosition,_data.Segments.Last.Value.Layer));
             }
         }
 
         private void RemoveSegement(bool releaseSegment = false) {
-            GameObject segmentGO = _data.Segments.Last.Value.Segment;
+            SnakeSegment segment = _data.Segments.Last.Value;
             _data.Segments.RemoveLast();
             if (releaseSegment) {
-                segmentGO.GetComponent<SnakeSegmentReleaser>().Release();
+                if (segment.Renderer != null) {
+                    segment.Segment.GetComponent<BoxCollider2D>().isTrigger = true;
+                    GameManager.Instance.StartCoroutine(FadeAndDestroy(segment));
+                    return;
+                }
             }
-            else {
-                GameObject.Destroy(segmentGO);
-            }
+            segment.Segment.SetActive(false);
+            SegmentPool.Return(segment);
         }
-        private SnakeSegment CreateSegment(GameObject prefab,Vector2Int position, int layer) {
-            GameObject segment = GameObject.Instantiate(prefab);
-            segment.transform.localScale = GameManager.Instance.Level.Grid.cellSize * 1.01f;
-            segment.transform.parent = _data.SnakeTransform;
-            segment.transform.position = GameManager.Instance.Level.CenterInCell(position);
-            segment.layer = layer;
-            segment.GetComponent<SpriteRenderer>().sortingLayerName = LayerMask.LayerToName(layer);
-            return new SnakeSegment(segment,position);
+
+        private SnakeSegment CreateEmptySegment(GameObject prefab) {
+            return new SnakeSegment(GameObject.Instantiate(prefab));
+        }
+
+        private SnakeSegment CreateSegment(SnakeSegment segment,Vector2Int position, int layer) {
+            segment.Segment.SetActive(true);
+            segment.Segment.transform.localScale = GameManager.Instance.Level.Grid.cellSize * 1.01f;
+            segment.Segment.transform.parent = _data.SnakeTransform;
+            segment.Segment.transform.position = GameManager.Instance.Level.CenterInCell(position);
+            segment.ChangeLayer(layer);
+            segment.ModelPosition = position;
+            Color color = segment.Renderer.material.color;
+            color.a = 1f;
+            segment.Renderer.color = color;
+            return segment;
+        }
+
+        private IEnumerator FadeAndDestroy(SnakeSegment segment) {
+           
+            for (float fade = 1f; fade >= 0; fade -= 0.1f) {
+                Color color = segment.Renderer.material.color;
+                color.a = fade;
+                segment.Renderer.color = color;
+                yield return new WaitForSeconds(0.05f);
+            }
+
+            segment.Segment.SetActive(false);
+            SegmentPool.Return(segment);
         }
     }
 }

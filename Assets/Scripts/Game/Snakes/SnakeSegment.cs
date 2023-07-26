@@ -10,11 +10,15 @@ namespace ExtremeSnake.Game.Snakes
         public SpriteRenderer Renderer { get; set; }
         public Vector2Int ModelPosition { get; set; }
         public int Layer { get { return Segment.layer; } }
+
+
         public SnakeSegment(GameObject segment,Vector2Int modelPosition) {
             Segment = segment;
             ModelPosition = modelPosition;
             Renderer = segment.GetComponent<SpriteRenderer>();
         }
+
+        public SnakeSegment(GameObject segment) : this(segment, Vector2Int.zero) { }
 
         public void ChangeLayer(int layer) {
             Segment.layer = layer;

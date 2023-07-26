@@ -22,7 +22,7 @@ public class SnakeScore : MonoBehaviour
     private int _streak;
 
     void Start() {
-        MultiplierColors = GameManager.Instance.GlobalGradients;
+        MultiplierColors = GameManager.Instance.Settings.DefaultMultiplierGradients;
         Emitter = GetComponent<Snake>().SnakeEmitter;
         Emitter.Subscribe<ScoreEventArgs>("ScoreOnEat",HandleEat);
         Emitter.Subscribe<StringEventArgs>("ScoreOnShrink",HandleShrink);
@@ -35,6 +35,7 @@ public class SnakeScore : MonoBehaviour
         int multiplierCache = Multiplier;
         int scoreGained = args.PointsChange * multiplierCache;
         Score += scoreGained;
+        if (oldMultiplier != multiplierCache) GameManager.Instance.AudioControls.PlaySFX("mult-up");
         ScoreEventArgs newArgs = new ScoreEventArgs(args.SnakeUUID,_score,scoreGained,oldMultiplier != multiplierCache, Color.white);
         newArgs.Score = this;
         newArgs.MultiplierColors = MultiplierColors;
@@ -42,12 +43,13 @@ public class SnakeScore : MonoBehaviour
     }
 
     public void HandleShrink(object sender,StringEventArgs args) {
+        if (Multiplier > 1) GameManager.Instance.AudioControls.PlaySFX("mult-down");
         if (_streak > 0) _streak = 0;
         int oldScore = Score;
         Score -= FailureCost;
         int newScore = Score;
 
-        ScoreEventArgs newArgs = new ScoreEventArgs(args.Text,_score,newScore - oldScore,true, Color.red);
+        ScoreEventArgs newArgs = new ScoreEventArgs(args.Text,_score,newScore - oldScore,false, Color.red);
         newArgs.Score = this;
         newArgs.MultiplierColors = MultiplierColors;
         GameManager.Instance.GameEmitter.Emit($"{args.Text}OnScoreChanged",this,newArgs);
