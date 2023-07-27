@@ -1,4 +1,5 @@
 using ExtremeSnake.Game;
+using ExtremeSnake.Game.Data;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -16,6 +17,7 @@ public class PixelPerfectMultiplayerCameraController : MultiFocusCameraControlle
     protected override void Start() {
         zoomControls = GetComponent<PixelPerfectWithZoom>();
         base.Start();
+        GameManager.Instance.GameEmitter.Subscribe<GameObjectEventArgs>("CameraDropFocus",DropFocus);
     }
 
     private void FixedUpdate() {
@@ -42,5 +44,9 @@ public class PixelPerfectMultiplayerCameraController : MultiFocusCameraControlle
         } else {
             zoomControls.SetZoom(DefaultZoom);
         }
+    }
+
+    public void DropFocus(object sender, GameObjectEventArgs args) {
+        foci.Remove(args.GO.transform);
     }
 }
