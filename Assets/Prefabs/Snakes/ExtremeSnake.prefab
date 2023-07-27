@@ -65,6 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FailureCost: 10
   MultiplierHelper: {fileID: 11400000, guid: 35264e1e16ad51d4bb81d3bb8a800202, type: 2}
+  MultiplierColors: {fileID: 0}
   _score: 0
 --- !u!114 &1019396997
 MonoBehaviour:
@@ -125,5 +126,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FloatingTextPrefab: {fileID: 7510750846012948454, guid: 1f6bd314b8fcfd84094e46ecf397b2a4, type: 3}
-  Parent: {fileID: 0}
+  FloatingMultiplierPrefab: {fileID: 7510750846012948454, guid: a1c962b7982c7b4498a5b3e6902d85c9, type: 3}
   HeightScale: 1

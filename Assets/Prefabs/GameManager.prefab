@@ -178,18 +178,24 @@ MonoBehaviour:
     - bounce
     - fail
     - count-down
+    - mult-up
+    - mult-down
     _keys:
     - eat
     - balloon-bounce
     - bounce
     - fail
     - count-down
+    - mult-up
+    - mult-down
     _values:
     - {fileID: 8300000, guid: 33c645f1c24e1ae44a77a2664c0ace73, type: 3}
     - {fileID: 8300000, guid: 1acf77a56b1ae324b8cb3f37a17460f8, type: 3}
     - {fileID: 8300000, guid: 2f0c6e34bb6ec6a49833e53e3d81a4bb, type: 3}
     - {fileID: 8300000, guid: 61ecd8e0fab698b46b7dda054eec4327, type: 3}
     - {fileID: 8300000, guid: af3404f80dd2e8b4387bc9f7b5fc0b00, type: 3}
+    - {fileID: 8300000, guid: 4eb3566dde7e1484d8592cb6456616f3, type: 3}
+    - {fileID: 8300000, guid: aa40f90f870e93f4cabf1c9b88d1aa7c, type: 3}
 --- !u!82 &1486043502
 AudioSource:
   m_ObjectHideFlags: 0
@@ -333,7 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingState: 0
-  isDevelopment: 0
+  isDevelopment: 1
   Settings:
     DefaultController: {fileID: 3261442853206872116, guid: 9c9c46c689978b44ea7bdfa2739a819a, type: 3}
     DefaultSnake: {fileID: 8058597237729159821, guid: 4a3486453a2e7b844bb3187104587f8f, type: 3}
@@ -341,9 +347,9 @@ MonoBehaviour:
     DefaultDifficulty: {fileID: 11400000, guid: fadcdabf7332969488cb01157d77a3d0, type: 2}
     DefaultMultiplierGradients: {fileID: 11400000, guid: ef48d68f58999874e856bc949df33911, type: 2}
     AudioSettings:
-      _masterVolume: 10
+      _masterVolume: 28
       _musicVolume: 100
-      _sfxVolume: 100
+      _sfxVolume: 51
       _masterMute: 0
       _musicMute: 0
       _sfxMute: 0
