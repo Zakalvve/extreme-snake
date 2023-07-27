@@ -1,4 +1,5 @@
 using Assets.Scripts.Game.Events;
+using Assets.Scripts.Game.Managers.Game_Manager.Concrete_States;
 using ExtremeSnake.Core;
 using ExtremeSnake.Game;
 using ExtremeSnake.Game.Data;
@@ -18,14 +19,19 @@ namespace ExtremeSnake.Game
         public GameState(GameManager context) : base(context) { }
 
         private bool _isPaused = false;
-        private float _elapsedTimeSinceLastSecond = 0f;
-        private float _elapsedTimeSinceLastTick = 0f;
+        private float _elapsedTimeSinceLastSecond;
+        private float _elapsedTimeSinceLastTick;
         private int _secondsRemaining;
 
         public override void TransitionTo() {
-            _secondsRemaining = _context.Settings.ActiveSession.Duration;
+            _secondsRemaining = _context.Settings.ActiveSession.SecondsRemaining == 0 ? _context.Settings.ActiveSession.Duration : _context.Settings.ActiveSession.SecondsRemaining;
+            _elapsedTimeSinceLastSecond = _context.Settings.ActiveSession.ElapsedTimeSinceLastSecond;
+            _elapsedTimeSinceLastTick = _context.Settings.ActiveSession.ElapsedTimeSinceLastTick;
+            _isPaused = false;
+
             Subscriptions.Add(_context.GameEmitter.Subscribe<StringEventArgs>("OnSnakeDeath",HandleSnakeDeath));
-            Subscriptions.Add(_context.GameEmitter.Subscribe("OnPause",HandlePause));
+            Subscriptions.Add(_context.GameEmitter.Subscribe("TryPause",HandlePause));
+            Subscriptions.Add(_context.GameEmitter.Subscribe("OnEscape",HandlePause));
         }
 
         public override void Update() { }
@@ -57,6 +63,7 @@ namespace ExtremeSnake.Game
 
         public void HandleSnakeDeath(object sender, StringEventArgs args) {
             _context.Settings.ActiveSession.ActiveSnakes.Remove(args.Text);
+
             if (_context.Settings.ActiveSession.ActiveSnakes.Count <= 1) {
                 GameOver();
             }
@@ -68,8 +75,12 @@ namespace ExtremeSnake.Game
         }
 
         public void HandlePause(object sender) {
-            _isPaused = _isPaused ? false : true;
-            _context.GameEmitter.Emit("TogglePause",this);
+            _isPaused = true;
+            _context.Settings.ActiveSession.ElapsedTimeSinceLastTick = _elapsedTimeSinceLastTick;
+            _context.Settings.ActiveSession.ElapsedTimeSinceLastSecond = _elapsedTimeSinceLastSecond;
+            _context.Settings.ActiveSession.SecondsRemaining = _secondsRemaining;
+            UnsubscribeFromAll();
+            _context.ChangeState(new PausedState(_context));
         }
     }
 }

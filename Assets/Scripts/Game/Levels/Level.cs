@@ -7,17 +7,21 @@ using ExtremeSnake.Utils;
 using ExtremeSnake.Game.Snakes;
 using ExtremeSnake.Game.Data;
 using System;
+using ExtremeSnake.Core;
 
 namespace ExtremeSnake.Game.Levels
 {
     [RequireComponent(typeof(Grid))]
-    public class Level : InstanceTracker<Level>// MonoBehaviour
+    public class Level : InstanceTracker<Level>, IPausable
     {
         public GameObject debugGO;
         public Grid Grid;
         public LevelFood foodInLevel;
         public int spawnFrequency = 0;
         private List<LevelLayer> Layers { get; set; }
+
+        public bool IsPaused { get; private set; } = false;
+
         private Dictionary<int, LevelLayer> _layers = new Dictionary<int, LevelLayer>();
         private List<SnakeSpawnPointStatus> _snakeSpawners;
         private FoodSpawner _foodSpawner;
@@ -38,6 +42,9 @@ namespace ExtremeSnake.Game.Levels
             GameManager.Instance.GameEmitter.Subscribe("OnTick",Tick);
             GameManager.Instance.GameEmitter.Subscribe<SnakeMoveEventArgs>("OnSnakePositionsChanged",UpdateWalkables);
             GameManager.Instance.GameEmitter.Emit("OnLevelStartComplete",this);
+            GameManager.Instance.GameEmitter.Subscribe("GamePaused",HandlePause);
+            GameManager.Instance.GameEmitter.Subscribe("ResumeGame",HandleResume);
+
             GameManager.Instance.GameEmitter.Subscribe("OnLoadComplete",(object sender) => {
                 for (int i = 0; i < 5; i++) {
                     try {
@@ -52,6 +59,7 @@ namespace ExtremeSnake.Game.Levels
         }
 
         private void Update() {
+            if (IsPaused) return;
             elapsed += Time.deltaTime;
             if (elapsed > 0.05f) {
                 DrawDebug();
@@ -77,10 +85,11 @@ namespace ExtremeSnake.Game.Levels
         }
 
         public void Tick(object sender) {
+            if (IsPaused) return;
             spawnFrequency++;
             FoodDifficulty diff = GameManager.Instance.Settings.ActiveSession.DifficultySettings.FoodScarcity;
             int numActors = GameManager.Instance.Settings.ActiveSession.Actors.Count;
-            int numFoodInLevel = InstanceTracker<Food>.Instances.Count;
+            int numFoodInLevel = _foodSpawner.FoodCount();
             if (spawnFrequency > diff.FoodSpawnRate - (3 * (numActors - 1))) {
                 if (numFoodInLevel < (diff.MaxFood*numActors)
                  || diff.MaxFood == 0
@@ -161,6 +170,22 @@ namespace ExtremeSnake.Game.Levels
                 //debug.Add(() => Debug.DrawRay(Camera.main.transform.position,cellWorld - Camera.main.transform.position,Color.green));
             }
             return true;
+        }
+
+        public void HandlePause(object sender) {
+            Pause();
+        }
+
+        public void Pause() {
+            IsPaused = true;
+        }
+
+        public void HandleResume(object sender) {
+            Resume();
+        }
+
+        public void Resume() {
+            IsPaused = false;
         }
     }
 

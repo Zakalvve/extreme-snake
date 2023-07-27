@@ -12,9 +12,14 @@ namespace ExtremeSnake.Game
     {
         public PostGameState(GameManager context) : base(context) { }
         public override void TransitionTo() {
-            Subscriptions.Add(_context.GameEmitter.Subscribe("OnEnter",GameOver));
-            Subscriptions.Add(_context.GameEmitter.Subscribe("OnFinish",GameOver));
-            _context.GameEmitter.Emit("OnPostGame",this);
+            if (_context.Settings.ActiveSession.BypassFinalScoreboard) {
+                GameOver(this);
+            }
+            else {
+                Subscriptions.Add(_context.GameEmitter.Subscribe("OnEnter",GameOver));
+                Subscriptions.Add(_context.GameEmitter.Subscribe("OnFinish",GameOver));
+                _context.GameEmitter.Emit("OnPostGame",this);
+            }
         }
 
         public override void FixedUpdate() { }

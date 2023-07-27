@@ -18,6 +18,10 @@ namespace ExtremeSnake.Game
             DifficultySettings = difficulty;
         }
 
+        public float ElapsedTimeSinceLastSecond { get; set; } = 0f;
+        public float ElapsedTimeSinceLastTick { get; set; } = 0f;
+        public int SecondsRemaining { get; set; } = 0;
+        public bool BypassFinalScoreboard { get; set; } = false;
         public SessionData(List<Actor> actors,Difficulty difficulty) : this(SessionData._defaultDuration, actors, difficulty) { }
         public SessionData(List<Actor> actors) : this(SessionData._defaultDuration,actors,GameManager.Instance.Settings.DefaultDifficulty) { }
 
@@ -66,7 +70,6 @@ namespace ExtremeSnake.Game
                 GameObject.Destroy(controller.GetGameObject());
             });
             Snakes.ForEach(snake => {
-                snake.SnakeEmitter.UnsubscribeFromAll();
                 snake.RemoveAll();
                 GameObject.Destroy(snake.gameObject);
             });
