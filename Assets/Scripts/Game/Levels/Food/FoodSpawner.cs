@@ -10,11 +10,17 @@ namespace ExtremeSnake.Game.Levels
         [SerializeField]
         private LevelFood _levelFood;
         private Dictionary<string,InstancePooler<GameObject>> FoodPool = new Dictionary<string, InstancePooler<GameObject>>();
+        private List<GameObject> ActiveFoodItems = new List<GameObject>();
 
         public FoodSpawner(LevelFood levelFood) {
             _levelFood = levelFood;
         }
+
+        public int FoodCount() {
+            return ActiveFoodItems.Count;
+        }
         public void Spawn(string layer, Vector3 at) {
+
             FoodSpawnData spawn;
             try {
                 spawn = ChooseRandomFood();
@@ -32,7 +38,8 @@ namespace ExtremeSnake.Game.Levels
             foodGO.transform.position = at;
             foodGO.layer = LayerMask.NameToLayer(layer);
             foodGO.GetComponent<SpriteRenderer>().sortingLayerName = layer;
-            foodGO.GetComponent<Food>().OnEaten = (GameObject go) => FoodPool[spawn.name].Return(go);
+            foodGO.GetComponent<Food>().OnEaten = (GameObject go) => { FoodPool[spawn.name].Return(go); ActiveFoodItems.Remove(go); };
+            ActiveFoodItems.Add(foodGO);
         }
 
         private FoodSpawnData ChooseRandomFood() {
