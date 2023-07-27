@@ -13,7 +13,6 @@ namespace ExtremeSnake.Game.Snakes
         public Vector2 MoveDirection { get { return _data.MoveDirection; } }
         public Vector2 HeadPosition { get { return _data.Segments.First.Value.ModelPosition; } }
         private int _growth = 0;
-
         private ISnakeData _data;
         private bool canDraw = false;
         private Vector2Int lastPosition;
@@ -100,14 +99,18 @@ namespace ExtremeSnake.Game.Snakes
 
         private bool Shrink(int amount, bool releaseSegment = false) {
             for (int i = 0; i < amount; i++) {
-                if (_data.Segments.Count == 2 && _growth == 0) {
-                    _data.IsAlive = false;
-                    GameManager.Instance.GameEmitter.Emit("OnSnakeDeath",this, new StringEventArgs(_data.UUID));
-                    return false;
+                if (_data.Segments.Count == 2) {
+                    if (_growth == 0) {
+                        GameManager.Instance.GameEmitter.Emit("OnSnakeDeath",this,new StringEventArgs(_data.UUID));
+                        return false;
+                    } else {
+                        _growth--;
+                    }
+                } else {
+                    LevelPosition released = new LevelPosition(_data.Segments.Last.Value.ModelPosition,_data.Segments.Last.Value.Segment.layer);
+                    RemoveSegement(releaseSegment);
+                    GameManager.Instance.GameEmitter.Emit("OnSnakePositionsChanged",this,new SnakeMoveEventArgs(null,released));
                 }
-                LevelPosition released = new LevelPosition(_data.Segments.Last.Value.ModelPosition,_data.Segments.Last.Value.Segment.layer);
-                RemoveSegement(releaseSegment);
-                GameManager.Instance.GameEmitter.Emit("OnSnakePositionsChanged",this,new SnakeMoveEventArgs(null,released));
             }
             if (!releaseSegment) _data.SnakeEmitter.Emit("OnFlash",this);
             Draw();
@@ -125,7 +128,6 @@ namespace ExtremeSnake.Game.Snakes
             _data.Segments.RemoveLast();
             if (releaseSegment) {
                 if (segment.Renderer != null) {
-                    segment.Segment.GetComponent<BoxCollider2D>().isTrigger = true;
                     GameManager.Instance.StartCoroutine(FadeAndDestroy(segment));
                     return;
                 }
@@ -148,11 +150,12 @@ namespace ExtremeSnake.Game.Snakes
             Color color = segment.Renderer.material.color;
             color.a = 1f;
             segment.Renderer.color = color;
+            segment.Segment.GetComponent<BoxCollider2D>().isTrigger = false;
             return segment;
         }
 
         private IEnumerator FadeAndDestroy(SnakeSegment segment) {
-           
+            segment.Segment.GetComponent<BoxCollider2D>().isTrigger = true;
             for (float fade = 1f; fade >= 0; fade -= 0.1f) {
                 Color color = segment.Renderer.material.color;
                 color.a = fade;
