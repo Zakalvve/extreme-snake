@@ -30,7 +30,7 @@ public class SnakeDirectionalArrow : MonoBehaviour
         Emitter.Subscribe<ControllerEventArgs>("FinalSnakeDirection",OnChangeDirection);
         Emitter.Subscribe("OnFlash",Warning);
         ChangeDirection(s.MoveDirection);
-
+        _spriteRenderer.color = Color.red;
     }
 
     public void OnChangeDirection(object sender, ControllerEventArgs args) {
@@ -38,31 +38,28 @@ public class SnakeDirectionalArrow : MonoBehaviour
     }
 
     private void ChangeDirection(Vector2 dir) {
+        _spriteRenderer.enabled = false;
+
         if (dir == Vector2.up) {
             Aid.transform.position = transform.position + Vector3.up;
             _spriteRenderer.sprite = Up;
-            _spriteRenderer.color = Color.white;
-
         }
         else if (dir == Vector2.down) {
             Aid.transform.position = transform.position + Vector3.down;
             _spriteRenderer.sprite = Down;
-            _spriteRenderer.color = Color.white;
         }
         else if (dir == Vector2.left) {
             Aid.transform.position = transform.position + Vector3.left;
             _spriteRenderer.sprite = Left;
-            _spriteRenderer.color = Color.white;
         }
         else if (dir == Vector2.right) {
             Aid.transform.position = transform.position + Vector3.right;
             _spriteRenderer.sprite = Right;
-            _spriteRenderer.color = Color.white;
         }
     }
 
     public void Warning(object sender) {
-        _spriteRenderer.color = Color.red;
+        _spriteRenderer.enabled = true;
     }
 
     [ContextMenu("Up")]
