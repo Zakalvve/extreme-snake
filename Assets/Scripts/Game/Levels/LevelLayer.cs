@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Assets.Scripts.Core;
 using ExtremeSnake.Game.Levels;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Assets.Scripts.Levels
 {

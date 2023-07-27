@@ -21,7 +21,7 @@ namespace ExtremeSnake.Game
 
         public override void TransitionTo() {
             Subscriptions.Add(_context.GameEmitter.Subscribe("OnLevelStartComplete",HandleLevelLoaded));
-            if (GameManager.Instance.isDevelopment && _context.Settings.ActiveSession == null) {
+            if (GameManager.Instance.isDevelopment || _context.Settings.ActiveSession == null) {
                 CreateDevEntryPoint();
             }
 
@@ -36,7 +36,7 @@ namespace ExtremeSnake.Game
             }
         }
 
-        public void RegisterPlayerReady(Snake s) {
+        public void RegisterPlayerReady() {
             if (_context.Settings.ActiveSession.Snakes.Count == _context.Settings.ActiveSession.Actors.Count) {
                 _snakesLoaded = true;
             }
@@ -88,7 +88,7 @@ namespace ExtremeSnake.Game
                 if (GameManager.Instance.isDevelopment) {
                     //data.Invulnerable = true;
                 }
-                RegisterPlayerReady(s);
+                RegisterPlayerReady();
             });
 
             controller.AssignEmitter(emitter);
