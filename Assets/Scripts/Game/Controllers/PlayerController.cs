@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour, IController
     private InputAction _enter;
     private InputAction _escape;
 
+    protected bool _initialized = false;
+
     protected virtual void Awake() {
         PlayerInput = GetComponent<PlayerInput>();
     }
@@ -36,8 +38,14 @@ public class PlayerController : MonoBehaviour, IController
     //not very safe so worth thinking about changing anything can assign a emitter to this controller....
     public virtual void AssignEmitter(EventEmitter emitter) {
         _emitters.Add(emitter);
-        //only initialize input when we have somewhere for it to go
         InitializeInput();
+    }
+
+    //ensure action events are unsubscribed from if this object is destroyed
+    protected virtual void OnDestroy() {
+        _pause.performed -= PauseGame;
+        _enter.performed -= Enter;
+        _escape.performed -= Escape;
     }
 
     protected virtual void InitializeInput() {
@@ -50,11 +58,11 @@ public class PlayerController : MonoBehaviour, IController
         _enter = PlayerInput.actions["Enter"];
         _escape = PlayerInput.actions["Escape"];
 
-
         _pause.performed += PauseGame;
         _enter.performed += Enter;
         _escape.performed += Escape;
     }
+
     protected virtual void Update() {
         if (_up.triggered) {
             MoveUp((int)Player.PLAYER_1);
@@ -71,6 +79,7 @@ public class PlayerController : MonoBehaviour, IController
     }
 
     protected void MoveUp(int playerIndex) {
+        if (_emitters[playerIndex] == null) return;
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
@@ -78,6 +87,7 @@ public class PlayerController : MonoBehaviour, IController
         _emitters[playerIndex].Emit("OnChangeDirection",this,new ControllerEventArgs(Vector2.up));
     }
     protected void MoveDown(int playerIndex) {
+        if (_emitters[playerIndex] == null) return;
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
@@ -86,21 +96,25 @@ public class PlayerController : MonoBehaviour, IController
     }
 
     protected void MoveLeft(int playerIndex) {
+        if (_emitters[playerIndex] == null) return;
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
         }
         _emitters[playerIndex].Emit("OnChangeDirection",this,new ControllerEventArgs(Vector2.left));
     }
+
     protected void MoveRight(int playerIndex) {
+        if (_emitters[playerIndex] == null) return;
         if (_emitters.Count < 2 && playerIndex == (int)Player.PLAYER_2) {
             playerIndex = (int)Player.PLAYER_1;
             Debug.LogWarning("Two player controller has only one emitter assigned");
         }
         _emitters[playerIndex].Emit("OnChangeDirection",this,new ControllerEventArgs(Vector2.right));
     }
+
     private void PauseGame(InputAction.CallbackContext context) {
-        GameManager.Instance.GameEmitter.Emit("OnPause",this);
+        GameManager.Instance.GameEmitter.Emit("TryPause",this);
     }
 
     private void Enter(InputAction.CallbackContext context) {
