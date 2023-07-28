@@ -16,6 +16,8 @@ namespace ExtremeSnake.Game
         public AudioController AudioControls;
         public Level Level { get { return Settings.ActiveSession.SessionLevel; } }
 
+        public static bool IsReleaseVersion = true;
+
         protected override void Awake() {
             base.Awake();
             GameEmitter = new EventEmitter();
