@@ -39,7 +39,6 @@ public class PlaySetupMenu : MonoBehaviour
     public GameObject twoPlayerToggle;
     public List<string> SnakeNames = new List<string>();
 
-
     //initialization
     private void Awake() {
         SelectedLevelIndex = 0;
@@ -75,9 +74,9 @@ public class PlaySetupMenu : MonoBehaviour
 
         if (GameManager.Instance.Settings.Player2 != null) {
             toggleTwoPlayer();
-            addSyncRequired = true;
+            if (!GameManager.IsReleaseVersion) addSyncRequired = true;
         } else {
-            _playerComponents.Push(CreateMenuPlayerComponent());
+            if (!GameManager.IsReleaseVersion) _playerComponents.Push(CreateMenuPlayerComponent());
         }
         
         //if (isTwoPlayer) _playerComponents.Push(CreateMenuPlayerComponent(ParticipantType.PLAYER_2));
@@ -86,6 +85,8 @@ public class PlaySetupMenu : MonoBehaviour
 
     //gather data and start game
     public void OnPlayGame() {
+
+
         List<Actor> chosenActors = _playerComponents
             .Select(component => component.GetComponent<MenuPlayerComponent>())
             .Where(component => component.IsPlayerActive)
