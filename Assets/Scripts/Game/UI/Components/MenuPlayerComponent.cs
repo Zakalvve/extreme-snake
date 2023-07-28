@@ -29,6 +29,8 @@ public class MenuPlayerComponent : MonoBehaviour
 
     private bool _isReady = false;
     public bool IsPlayer = false;
+    
+    public bool IsReady { get { return _isReady; } }
 
     private ParticipantType PlayerType;
 
@@ -103,6 +105,10 @@ public class MenuPlayerComponent : MonoBehaviour
         UpdateSnakeAppearance();
     }
 
+    public void NotReadyAnimation() {
+        StartCoroutine(RiseAndFall(NotReadyIcon));
+    }
+
     public void UpdateSnakeAppearance(SnakeSprites skin) {
         Head.sprite = skin.HeadRight;
         Body.sprite = skin.Horizontal;
@@ -129,6 +135,29 @@ public class MenuPlayerComponent : MonoBehaviour
 
     public void AddPlayer() {
         GameManager.Instance.GameEmitter.Emit("OnPlayerComponentAdded",this, new AddPlayerEventArgs(ParticipantType.COMPUTER));
+    }
+
+    private IEnumerator RiseAndFall(GameObject go) {
+        float duration = 0.5f / 2;
+        float elapsed = 0f;
+        Vector3 initialScale = Vector3.one;
+        Vector3 targetScale = new Vector3(1.6f, 1.6f, 1);
+
+        //rise
+        while (elapsed < duration) {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            go.transform.localScale = Vector3.Lerp(initialScale,targetScale,t);
+            yield return null;
+        }
+        elapsed = 0f;
+        //and fall
+        while (elapsed < duration) {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            go.transform.localScale = Vector3.Lerp(targetScale,initialScale,t);
+            yield return null;
+        }
     }
 }
 

@@ -86,10 +86,17 @@ public class PlaySetupMenu : MonoBehaviour
     //gather data and start game
     public void OnPlayGame() {
 
-
-        List<Actor> chosenActors = _playerComponents
+        List<MenuPlayerComponent> ActiveComponents = _playerComponents
             .Select(component => component.GetComponent<MenuPlayerComponent>())
-            .Where(component => component.IsPlayerActive)
+            .Where(component => component.IsPlayerActive).ToList();
+
+        if (ActiveComponents.Count(pc => pc.IsReady) != ActiveComponents.Count) {
+            GameManager.Instance.AudioControls.PlaySFX("not-ready");
+            ActiveComponents.ForEach(pc => pc.NotReadyAnimation());
+            return;
+        }
+
+        List<Actor> chosenActors = ActiveComponents
             .Select(component => component.GetOutput())
             .ToList();
 
